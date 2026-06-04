@@ -29,38 +29,22 @@ const baseInstance = axios.create({
 export const todoListsApi = {
   getTodolists() {
     return baseInstance
-      .get<Array<TodoListType>>('todo-lists')
-      .then(response => {
-        console.log('Data log - fetch todo lists data', response);
-        return response.data;
-      });;
+      .get<Array<TodoListType>>('todo-lists');
   },
   createTodolist(title: string) {
     const payload = { title };
 
     return baseInstance
-      .post<ResponseType<{ itet: TodoListType }>>('todo-lists', payload)
-      .then(response => {
-        console.log('Data log - create todo list', response);
-        return response.data;
-      });;
+      .post<ResponseType<{ itet: TodoListType }>>('todo-lists', payload);
   },
   deleteTodolist(id: string) {
     return baseInstance
-      .delete<ResponseType>(`todo-lists/${id}`)
-      .then(response => {
-        console.log('Data log - remove todo list', response);
-        return response.data;
-      });
+      .delete<ResponseType>(`todo-lists/${id}`);
   },
   updateTodolistTitle(id: string, title: string) {
     const payload = { title };
 
     return baseInstance
-      .put<ResponseType>(`todo-lists/${id}`, payload)
-      .then(response => {
-        console.log('Data log - update todo list title', response);
-        return response.data;
-      });
+      .put<ResponseType>(`todo-lists/${id}`, payload);
   },
 };
