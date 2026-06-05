@@ -7,11 +7,39 @@ export type TodoListType = {
   order: number,
 };
 
-export type ResponseData<D = {}> = {
+export type TaskType = {
+  id: string,
+  todoListId: string,
+  title: string,
+  description: string,
+  status: number,
+  priority: number,
+  addedDate: string,
+  startDate: string,
+  deadline: string,
+  order: number,
+};
+
+type ResponseData<D = {}> = {
   data: D,
   resultCode: number,
   messages: Array<string>,
   fieldsErrors: Array<string>,
+};
+
+type GetTasksResponseData = {
+  items: Array<TaskType>,
+  totalCount: number,
+  error: string | null,
+};
+
+export type UpdateTaskRequestData = {
+  title: string,
+  description: string,
+  status: number,
+  priority: number,
+  startDate: string,
+  deadline: string,
 };
 
 const requestSettings = {
@@ -46,5 +74,23 @@ export const todoListsApi = {
 
     return baseInstance
       .put<ResponseData>(`todo-lists/${id}`, payload);
+  },
+  getTasks(todoListId: string) {
+    return baseInstance
+      .get<GetTasksResponseData>(`todo-lists/${todoListId}/tasks`);
+  },
+  createTask(todoListId: string, title: string) {
+    const payload = { title };
+
+    return baseInstance
+      .post<ResponseData<{ item: TaskType }>>(`todo-lists/${todoListId}/tasks`, payload);
+  },
+  deleteTask(todoListId: string, taskId: string) {
+    return baseInstance
+      .delete<ResponseData>(`todo-lists/${todoListId}/tasks/${taskId}`);
+  },
+  updateTask(todoListId: string, taskId: string, task: UpdateTaskRequestData) {
+    return baseInstance
+      .put<ResponseData<{ item: TaskType }>>(`todo-lists/${todoListId}/tasks/${taskId}`, task);
   },
 };
