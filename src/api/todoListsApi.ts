@@ -7,7 +7,7 @@ export type TodoListType = {
   order: number,
 };
 
-export type ResponseType<D = {}> = {
+export type ResponseData<D = {}> = {
   data: D,
   resultCode: number,
   messages: Array<string>,
@@ -35,16 +35,16 @@ export const todoListsApi = {
     const payload = { title };
 
     return baseInstance
-      .post<ResponseType<{ itet: TodoListType }>>('todo-lists', payload);
+      .post<ResponseData<{ itet: TodoListType }>>('todo-lists', payload);
   },
   deleteTodolist(id: string) {
     return baseInstance
-      .delete<ResponseType>(`todo-lists/${id}`);
+      .delete<ResponseData>(`todo-lists/${id}`);
   },
   updateTodolistTitle(id: string, title: string) {
     const payload = { title };
 
     return baseInstance
-      .put<ResponseType>(`todo-lists/${id}`, payload);
+      .put<ResponseData>(`todo-lists/${id}`, payload);
   },
 };
