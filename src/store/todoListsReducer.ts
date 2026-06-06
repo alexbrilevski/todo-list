@@ -1,4 +1,4 @@
-import type { FilterValues, TodoListType } from '../models/todo';
+import type { TodoListFilterValues, TodoListDomainType } from '../models/todo';
 import { v1 } from 'uuid';
 
 export const TODOLIST_ACTION_TYPES = {
@@ -19,14 +19,14 @@ type TodoListActions =
   ChangeTodoListFilterAction |
   RemovedTodoListAction;
 
-const initState: Array<TodoListType> = [];
+const initState: Array<TodoListDomainType> = [];
 
-export const todoListsReducer = (state: Array<TodoListType> = initState, action: TodoListActions): Array<TodoListType> => {
+export const todoListsReducer = (state: Array<TodoListDomainType> = initState, action: TodoListActions): Array<TodoListDomainType> => {
   switch (action.type) {
     case TODOLIST_ACTION_TYPES.ADD:
       return [
         ...state,
-        { id: action.id, title: action.title, filter: 'all' },
+        { id: action.id, title: action.title, addedDate: "", order: 0, filter: 'all' },
       ];
     case TODOLIST_ACTION_TYPES.CHANGE_TITLE:
       return state.map(todo => todo.id === action.id ?
@@ -49,7 +49,7 @@ export const changeTodoListTitleAC = (id: string, title: string) => {
   return { type: TODOLIST_ACTION_TYPES.CHANGE_TITLE, id, title };
 };
 
-export const changeTodoListFilterAC = (id: string, filter: FilterValues) => {
+export const changeTodoListFilterAC = (id: string, filter: TodoListFilterValues) => {
   return { type: TODOLIST_ACTION_TYPES.CHANGE_FILTER, id, filter };
 };
 

@@ -1,11 +1,5 @@
 import axios from 'axios';
-
-export type TodoListType = {
-  id: string,
-  title: string,
-  addedDate: string,
-  order: number,
-};
+import type { TodoListType } from '../models/todo';
 
 export type TaskType = {
   id: string,

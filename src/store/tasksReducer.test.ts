@@ -6,7 +6,7 @@ import {
   tasksReducer,
   type TasksStateType
 } from './tasksReducer';
-import type { TodoListType } from '../models/todo';
+import type { TodoListDomainType } from '../models/todo';
 import { addTodoListAC, removeTodoListAC, todoListsReducer } from './todoListsReducer';
 
 const todoListId1: string = 'todoListId1';
@@ -104,7 +104,7 @@ test('Property with an empty array is added to state when a new Todo list is add
 
 test('Todo list Ids added to Todo lists and Tasks state is equal', () => {
   const startTasksState: TasksStateType = {};
-  const startTodoListsState: Array<TodoListType> = [];
+  const startTodoListsState: Array<TodoListDomainType> = [];
 
   const action = addTodoListAC('New Todo list');
 

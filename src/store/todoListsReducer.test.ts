@@ -5,12 +5,12 @@ import {
   removeTodoListAC,
   todoListsReducer
 } from './todoListsReducer';
-import type { FilterValues, TodoListType } from '../models/todo';
+import type { TodoListFilterValues, TodoListDomainType } from '../models/todo';
 import { v1 } from 'uuid';
 
 let todoListId1: string;
 let todoListId2: string;
-let startState: Array<TodoListType>;
+let startState: Array<TodoListDomainType>;
 
 beforeEach(() => {
   todoListId1 = v1();
@@ -20,12 +20,16 @@ beforeEach(() => {
     {
       id: todoListId1,
       title: "What to learn",
+      addedDate: "",
+      order: 0,
       filter: "all",
     },
     {
       id: todoListId2,
       title: "What to buy",
-      filter: "all"
+      addedDate: "",
+      order: 1,
+      filter: "all",
     },
   ];
 });
@@ -51,7 +55,7 @@ test('Todo list title changes correctly', () => {
 });
 
 test('Todo list filter changes correctly', () => {
-  const newFilter: FilterValues = "completed";
+  const newFilter: TodoListFilterValues = "completed";
   const action = changeTodoListFilterAC(todoListId2, newFilter);
 
   const endState = todoListsReducer(startState, action);
