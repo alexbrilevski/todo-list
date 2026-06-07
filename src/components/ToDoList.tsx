@@ -1,5 +1,5 @@
 import { memo, useCallback, type FC } from 'react';
-import type { TaskType } from '../models/task';
+import { TaskStatuses, type TaskStatus, type TaskType } from '../models/task';
 import type { TodoListFilterValues } from '../models/todo';
 import AddItemForm from './UI/AddItemForm/AddItemForm';
 import Task from './Task/Task';
@@ -16,7 +16,7 @@ type ToDoListProps = {
   removeTodoList: (id: string) => void,
   addTask: (id: string, title: string) => void,
   changeTaskTitle: (id: string, taskId: string, title: string) => void,
-  changeTaskStatus: (id: string, taskId: string, status: boolean) => void,
+  changeTaskStatus: (id: string, taskId: string, status: TaskStatus) => void,
   removeTask: (id: string, taskId: string) => void,
   changeFilter: (id: string, filter: TodoListFilterValues) => void,
 };
@@ -49,11 +49,11 @@ const ToDoList: FC<ToDoListProps> = memo(({
   let filteredTasks = tasks;
 
   if (filter === "active") {
-    filteredTasks = filteredTasks.filter(task => !task.isDone);
+    filteredTasks = filteredTasks.filter(task => task.status === TaskStatuses.New);
   }
 
   if (filter === "completed") {
-    filteredTasks = filteredTasks.filter(task => task.isDone);
+    filteredTasks = filteredTasks.filter(task => task.status === TaskStatuses.Completed);
   }
 
   return (

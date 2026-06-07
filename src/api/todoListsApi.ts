@@ -1,18 +1,6 @@
 import axios from 'axios';
 import type { TodoListType } from '../models/todo';
-
-export type TaskType = {
-  id: string,
-  todoListId: string,
-  title: string,
-  description: string,
-  status: number,
-  priority: number,
-  addedDate: string,
-  startDate: string,
-  deadline: string,
-  order: number,
-};
+import type { TaskType } from '../models/task';
 
 type ResponseData<D = {}> = {
   data: D,

@@ -5,23 +5,44 @@ import { Provider } from "react-redux";
 import { todoListsReducer } from "./store/todoListsReducer";
 import { tasksReducer } from "./store/tasksReducer";
 import type { AppRootState } from "./store/store";
+import { TaskPriorities, TaskStatuses } from "./models/task";
 
 import App from "./App";
 
 const mockPreloadedState = {
   todos: [
-    { id: "todolistId1", title: "What to learn", filter: "all" },
-    { id: "todolistId2", title: "What to buy", filter: "all" },
+    { id: "todolistId1", title: "What to Learn", addedDate: "", order: 0, filter: "all" },
+    { id: "todolistId2", title: "What to Buy", addedDate: "", order: 1, filter: "all" },
   ],
   tasks: {
     "todolistId1": [
-      { id: v1(), title: "HTML&CSS", isDone: true },
-      { id: v1(), title: "JS", isDone: true },
+      {
+        id: v1(), title: "HTML&CSS", todoListId: "todolistId1", description: "",
+        status: TaskStatuses.Completed, priority: TaskPriorities.Low,
+        startDate: "", deadline: "", addedDate: "", order: 0,
+      },
+      {
+        id: v1(), title: "JS", todoListId: "todolistId1", description: "",
+        status: TaskStatuses.New, priority: TaskPriorities.Low,
+        startDate: "", deadline: "", addedDate: "", order: 0,
+      },
     ],
     "todolistId2": [
-      { id: v1(), title: "Bread", isDone: true },
-      { id: v1(), title: "Milk", isDone: true },
-      { id: v1(), title: "Book", isDone: false, },
+      {
+        id: v1(), title: "Bread", todoListId: "todolistId2", description: "",
+        status: TaskStatuses.Completed, priority: TaskPriorities.Low,
+        startDate: "", deadline: "", addedDate: "", order: 0,
+      },
+      {
+        id: v1(), title: "Milk", todoListId: "todolistId2", description: "",
+        status: TaskStatuses.Completed, priority: TaskPriorities.Low,
+        startDate: "", deadline: "", addedDate: "", order: 0,
+      },
+      {
+        id: v1(), title: "Bread", todoListId: "todolistId2", description: "",
+        status: TaskStatuses.New, priority: TaskPriorities.Low,
+        startDate: "", deadline: "", addedDate: "", order: 0,
+      },
     ],
   },
 };
