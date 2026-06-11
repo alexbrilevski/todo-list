@@ -19,6 +19,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import type { AppRootState } from './store/store';
 import type { TodoListFilterValues, TodoListDomainType } from './models/todo';
+import type { TaskStatus } from './models/task';
 
 const App: FC = () => {
   const todos = useSelector<AppRootState, Array<TodoListDomainType>>(state => state.todos);
@@ -49,7 +50,7 @@ const App: FC = () => {
     dispatch(changeTaskTitleAC(todoId, taskId, title));
   }, []);
 
-  const changeTaskStatus = useCallback((todoId: string, taskId: string, status: boolean) => {
+  const changeTaskStatus = useCallback((todoId: string, taskId: string, status: TaskStatus) => {
     dispatch(changeTaskStatusAC(todoId, taskId, status));
   }, []);
 
