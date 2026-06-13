@@ -1,19 +1,24 @@
-import type { TodoListFilterValues, TodoListDomainType } from '../models/todo';
+import type { Dispatch } from 'redux';
+import type { TodoListFilterValues, TodoListDomainType, TodoListType } from '../models/todo';
 import { v1 } from 'uuid';
+import { todoListsApi } from '../api/todoListsApi';
 
 export const TODOLIST_ACTION_TYPES = {
+  SET_TODOS: 'todoList/SET_TODOS',
   ADD: 'todoList/ADD',
   CHANGE_TITLE: 'todoList/CHANGE_TITLE',
   CHANGE_FILTER: 'todoList/CHANGE_FILTER',
   REMOVE: 'todoList/REMOVE',
 } as const;
 
+export type SetTodoListsAction = ReturnType<typeof setTodoListsAC>;
 export type AddTodoListAction = ReturnType<typeof addTodoListAC>;
 type ChangeTodoListTitleAction = ReturnType<typeof changeTodoListTitleAC>;
 type ChangeTodoListFilterAction = ReturnType<typeof changeTodoListFilterAC>;
 export type RemovedTodoListAction = ReturnType<typeof removeTodoListAC>;
 
 export type TodoListActions =
+  SetTodoListsAction |
   AddTodoListAction |
   ChangeTodoListTitleAction |
   ChangeTodoListFilterAction |
@@ -23,6 +28,8 @@ const initState: Array<TodoListDomainType> = [];
 
 export const todoListsReducer = (state: Array<TodoListDomainType> = initState, action: TodoListActions): Array<TodoListDomainType> => {
   switch (action.type) {
+    case TODOLIST_ACTION_TYPES.SET_TODOS:
+      return action.todos.map(todo => ({ ...todo, filter: 'all' }));
     case TODOLIST_ACTION_TYPES.ADD:
       return [
         ...state,
@@ -41,6 +48,10 @@ export const todoListsReducer = (state: Array<TodoListDomainType> = initState, a
   }
 };
 
+export const setTodoListsAC = (todos: Array<TodoListType>) => {
+  return { type: TODOLIST_ACTION_TYPES.SET_TODOS, todos };
+};
+
 export const addTodoListAC = (title: string) => {
   return { type: TODOLIST_ACTION_TYPES.ADD, id: v1(), title };
 };
@@ -55,4 +66,12 @@ export const changeTodoListFilterAC = (id: string, filter: TodoListFilterValues)
 
 export const removeTodoListAC = (id: string) => {
   return { type: TODOLIST_ACTION_TYPES.REMOVE, id };
+};
+
+export const fetchTodoLists = () => {
+  return (dispatch: Dispatch) => {
+    todoListsApi.getTodolists().then(response => {
+      dispatch(setTodoListsAC(response.data));
+    });
+  };
 };

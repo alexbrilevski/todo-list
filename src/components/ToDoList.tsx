@@ -1,4 +1,4 @@
-import { memo, useCallback, type FC } from 'react';
+import { memo, useCallback, useEffect, type FC } from 'react';
 import { TaskStatuses, type TaskStatus, type TaskType } from '../models/task';
 import type { TodoListFilterValues } from '../models/todo';
 import AddItemForm from './UI/AddItemForm/AddItemForm';
@@ -6,6 +6,8 @@ import Task from './Task/Task';
 import EditableSpan from './UI/EditableSpan/EditableSpan';
 import { Button, IconButton } from '@mui/material';
 import { Delete } from '@mui/icons-material';
+import { useAppDispatch } from '../store/store';
+import { fetchTasks } from '../store/tasksReducer';
 
 type ToDoListProps = {
   id: string,
@@ -34,6 +36,12 @@ const ToDoList: FC<ToDoListProps> = memo(({
   removeTask,
   changeFilter,
 }) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTasks(id));
+  }, []);
+
   const onAddTask = useCallback((title: string) => {
     addTask(id, title);
   }, [addTask, id]);

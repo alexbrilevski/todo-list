@@ -3,6 +3,7 @@ import {
   changeTodoListFilterAC,
   changeTodoListTitleAC,
   removeTodoListAC,
+  setTodoListsAC,
   todoListsReducer
 } from './todoListsReducer';
 import type { TodoListFilterValues, TodoListDomainType } from '../models/todo';
@@ -72,4 +73,11 @@ test('Todo list is correctly removed', () => {
 
   expect(endState.length).toBe(1);
   expect(endState[0].id).toBe(todoListId2);
+});
+
+test('Todo lists are set correctly to app state', () => {
+  const action = setTodoListsAC(startState);
+  const endState = todoListsReducer([], action);
+
+  expect(endState.length).toBe(2);
 });

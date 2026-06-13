@@ -1,3 +1,4 @@
+import type { Dispatch } from 'redux';
 import {
   TaskPriorities,
   TaskStatuses,
@@ -7,11 +8,14 @@ import {
 import {
   TODOLIST_ACTION_TYPES,
   type AddTodoListAction,
-  type RemovedTodoListAction
+  type RemovedTodoListAction,
+  type SetTodoListsAction
 } from './todoListsReducer';
 import { v1 } from 'uuid';
+import { todoListsApi } from '../api/todoListsApi';
 
 const TASK_ACTION_TYPES = {
+  SET_TAKS: 'task/SET_TASKS',
   ADD: 'task/ADD',
   CHANGE_TITLE: 'task/CHANGE_TITLE',
   CHANGE_STATUS: 'task/CHANGE_STATUS',
@@ -22,16 +26,19 @@ export type TasksStateType = {
   [key: string]: Array<TaskType>,
 };
 
+type SetTasksAction = ReturnType<typeof setTasksAC>;
 type AddTaskAction = ReturnType<typeof addTaskAC>;
 type ChangeTaskTitleAction = ReturnType<typeof changeTaskTitleAC>;
 type ChangeTaskStatusAction = ReturnType<typeof changeTaskStatusAC>;
 type RemovedTaskAction = ReturnType<typeof removeTaskAC>;
 
 export type TaskActions =
+  SetTasksAction |
   AddTaskAction |
   ChangeTaskTitleAction |
   ChangeTaskStatusAction |
   RemovedTaskAction |
+  SetTodoListsAction |
   AddTodoListAction |
   RemovedTodoListAction;
 
@@ -39,6 +46,11 @@ const initState: TasksStateType = {};
 
 export const tasksReducer = (state: TasksStateType = initState, action: TaskActions): TasksStateType => {
   switch (action.type) {
+    case TASK_ACTION_TYPES.SET_TAKS: {
+      const updatedState = { ...state };
+      updatedState[action.todoListId] = action.tasks;
+      return updatedState;
+    }
     case TASK_ACTION_TYPES.ADD:
       const newTask: TaskType = {
         id: v1(),
@@ -79,6 +91,11 @@ export const tasksReducer = (state: TasksStateType = initState, action: TaskActi
         ...state,
         [action.todoId]: state[action.todoId].filter(task => task.id !== action.taskId),
       };
+    case TODOLIST_ACTION_TYPES.SET_TODOS: {
+      const updatedState = { ...state };
+      action.todos.forEach(todo => updatedState[todo.id] = []);
+      return updatedState;
+    }
     case TODOLIST_ACTION_TYPES.ADD:
       return { ...state, [action.id]: [] };
     case TODOLIST_ACTION_TYPES.REMOVE:
@@ -88,6 +105,10 @@ export const tasksReducer = (state: TasksStateType = initState, action: TaskActi
     default:
       return state;
   }
+};
+
+export const setTasksAC = (todoListId: string, tasks: Array<TaskType>) => {
+  return { type: TASK_ACTION_TYPES.SET_TAKS, todoListId, tasks };
 };
 
 export const addTaskAC = (todoId: string, title: string) => {
@@ -104,4 +125,12 @@ export const changeTaskStatusAC = (todoId: string, taskId: string, status: TaskS
 
 export const removeTaskAC = (todoId: string, taskId: string) => {
   return { type: TASK_ACTION_TYPES.REMOVE, todoId, taskId };
+};
+
+export const fetchTasks = (todoListId: string) => {
+  return (dispatch: Dispatch) => {
+    todoListsApi.getTasks(todoListId).then(response => {
+      dispatch(setTasksAC(todoListId, response.data.items));
+    });
+  };
 };

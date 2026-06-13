@@ -3,11 +3,12 @@ import {
   changeTaskStatusAC,
   changeTaskTitleAC,
   removeTaskAC,
+  setTasksAC,
   tasksReducer,
   type TasksStateType
 } from './tasksReducer';
 import type { TodoListDomainType } from '../models/todo';
-import { addTodoListAC, removeTodoListAC, todoListsReducer } from './todoListsReducer';
+import { addTodoListAC, removeTodoListAC, setTodoListsAC, todoListsReducer } from './todoListsReducer';
 import { TaskPriorities, TaskStatuses } from '../models/task';
 
 const todoListId1: string = 'todoListId1';
@@ -172,3 +173,26 @@ test('Property with specified Todo list Id should be deleted from state', () => 
   expect(endState[todoListId2]).not.toBeDefined();
 });
 
+test('Empty tasks arrays are added to state correctly when todo lists are set', () => {
+  const action = setTodoListsAC([
+    { id: todoListId1, title: "What to learn", addedDate: "", order: 0 },
+    { id: todoListId2, title: "What to buy", addedDate: "", order: 0 },
+  ]);
+
+  const endState = tasksReducer({}, action);
+
+  expect(endState[todoListId1]).toEqual([]);
+  expect(endState[todoListId2]).toEqual([]);
+});
+
+test('Tasks for specific todo list are set to app state correctly', () => {
+  const action = setTasksAC(todoListId1, startState[todoListId1]);
+
+  const endState = tasksReducer({
+    [todoListId1]: [],
+    [todoListId2]: [],
+  }, action);
+
+  expect(endState[todoListId1].length).toBe(3);
+  expect(endState[todoListId2].length).toBe(0);
+});

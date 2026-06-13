@@ -1,4 +1,4 @@
-import { useCallback, type FC } from 'react';
+import { useCallback, useEffect, type FC } from 'react';
 import AppHeader from './components/AppHeader';
 import AddItemForm from './components/UI/AddItemForm/AddItemForm';
 import ToDoList from './components/ToDoList';
@@ -7,6 +7,7 @@ import {
   addTodoListAC,
   changeTodoListFilterAC,
   changeTodoListTitleAC,
+  fetchTodoLists,
   removeTodoListAC,
 } from './store/todoListsReducer';
 import {
@@ -24,6 +25,10 @@ const App: FC = () => {
   const todos = useAppSelector<Array<TodoListDomainType>>(state => state.todos);
   const tasks = useAppSelector<TasksStateType>(state => state.tasks);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTodoLists());
+  }, []);
 
   const addTodoList = useCallback((title: string) => {
     dispatch(addTodoListAC(title));
