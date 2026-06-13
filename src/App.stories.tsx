@@ -4,7 +4,7 @@ import { combineReducers, createStore } from "redux";
 import { Provider } from "react-redux";
 import { todoListsReducer } from "./store/todoListsReducer";
 import { tasksReducer } from "./store/tasksReducer";
-import type { AppRootState } from "./store/store";
+import type { RootState } from "./store/store";
 import { TaskPriorities, TaskStatuses } from "./models/task";
 
 import App from "./App";
@@ -52,7 +52,7 @@ const rootReducer = combineReducers({
   tasks: tasksReducer,
 });
 
-const mockStore = createStore(rootReducer, mockPreloadedState as AppRootState);
+const mockStore = createStore(rootReducer, mockPreloadedState as RootState);
 
 const meta = {
   title: "TodoList/App",

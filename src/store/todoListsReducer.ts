@@ -13,7 +13,7 @@ type ChangeTodoListTitleAction = ReturnType<typeof changeTodoListTitleAC>;
 type ChangeTodoListFilterAction = ReturnType<typeof changeTodoListFilterAC>;
 export type RemovedTodoListAction = ReturnType<typeof removeTodoListAC>;
 
-type TodoListActions =
+export type TodoListActions =
   AddTodoListAction |
   ChangeTodoListTitleAction |
   ChangeTodoListFilterAction |

@@ -27,7 +27,7 @@ type ChangeTaskTitleAction = ReturnType<typeof changeTaskTitleAC>;
 type ChangeTaskStatusAction = ReturnType<typeof changeTaskStatusAC>;
 type RemovedTaskAction = ReturnType<typeof removeTaskAC>;
 
-type TaskActions =
+export type TaskActions =
   AddTaskAction |
   ChangeTaskTitleAction |
   ChangeTaskStatusAction |

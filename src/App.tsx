@@ -16,15 +16,14 @@ import {
   removeTaskAC,
   type TasksStateType,
 } from './store/tasksReducer';
-import { useSelector, useDispatch } from 'react-redux';
-import type { AppRootState } from './store/store';
+import { useAppDispatch, useAppSelector } from './store/store';
 import type { TodoListFilterValues, TodoListDomainType } from './models/todo';
 import type { TaskStatus } from './models/task';
 
 const App: FC = () => {
-  const todos = useSelector<AppRootState, Array<TodoListDomainType>>(state => state.todos);
-  const tasks = useSelector<AppRootState, TasksStateType>(state => state.tasks);
-  const dispatch = useDispatch();
+  const todos = useAppSelector<Array<TodoListDomainType>>(state => state.todos);
+  const tasks = useAppSelector<TasksStateType>(state => state.tasks);
+  const dispatch = useAppDispatch();
 
   const addTodoList = useCallback((title: string) => {
     dispatch(addTodoListAC(title));
