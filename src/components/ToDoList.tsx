@@ -40,7 +40,7 @@ const ToDoList: FC<ToDoListProps> = memo(({
 
   useEffect(() => {
     dispatch(fetchTasks(id));
-  }, []);
+  }, [id]);
 
   const onAddTask = useCallback((title: string) => {
     addTask(id, title);
