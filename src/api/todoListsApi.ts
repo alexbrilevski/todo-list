@@ -45,7 +45,7 @@ export const todoListsApi = {
     const payload = { title };
 
     return baseInstance
-      .post<ResponseData<{ itet: TodoListType }>>('todo-lists', payload);
+      .post<ResponseData<{ item: TodoListType }>>('todo-lists', payload);
   },
   deleteTodolist(id: string) {
     return baseInstance
