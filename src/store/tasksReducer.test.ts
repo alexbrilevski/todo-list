@@ -7,9 +7,10 @@ import {
   tasksReducer,
   type TasksStateType
 } from './tasksReducer';
-import type { TodoListDomainType } from '../models/todo';
+import type { TodoListDomainType, TodoListType } from '../models/todo';
 import { addTodoListAC, removeTodoListAC, setTodoListsAC, todoListsReducer } from './todoListsReducer';
 import { TaskPriorities, TaskStatuses } from '../models/task';
+import { v1 } from 'uuid';
 
 const todoListId1: string = 'todoListId1';
 const todoListId2: string = 'todoListId2';
@@ -132,7 +133,9 @@ test('Task is correctly removed from specified Todo list', () => {
 });
 
 test('Property with an empty array is added to state when a new Todo list is added', () => {
-  const action = addTodoListAC('New Todo list');
+  const newTodo: TodoListType = { id: v1(), title: "New Todo list", addedDate: "", order: 0 };
+
+  const action = addTodoListAC(newTodo);
 
   const endState = tasksReducer(startState, action);
 
@@ -143,14 +146,15 @@ test('Property with an empty array is added to state when a new Todo list is add
   }
 
   expect(keys.length).toBe(3);
-  expect(endState[newKey]).toEqual([]);
+  expect(endState[newKey]).toStrictEqual([]);
 });
 
 test('Todo list Ids added to Todo lists and Tasks state is equal', () => {
   const startTasksState: TasksStateType = {};
   const startTodoListsState: Array<TodoListDomainType> = [];
+  const newTodo: TodoListType = { id: v1(), title: "New Todo list", addedDate: "", order: 0 };
 
-  const action = addTodoListAC('New Todo list');
+  const action = addTodoListAC(newTodo);
 
   const endTasksState = tasksReducer(startTasksState, action);
   const endTodoListsState = todoListsReducer(startTodoListsState, action);
@@ -159,8 +163,8 @@ test('Todo list Ids added to Todo lists and Tasks state is equal', () => {
   const idFromTasks = keys[0];
   const idFromTodolists = endTodoListsState[0].id;
 
-  expect(idFromTasks).toBe(action.id);
-  expect(idFromTodolists).toBe(action.id);
+  expect(idFromTasks).toBe(action.newTodo.id);
+  expect(idFromTodolists).toBe(action.newTodo.id);
 });
 
 test('Property with specified Todo list Id should be deleted from state', () => {
@@ -180,9 +184,11 @@ test('Empty tasks arrays are added to state correctly when todo lists are set', 
   ]);
 
   const endState = tasksReducer({}, action);
+  const keys = Object.keys(endState);
 
-  expect(endState[todoListId1]).toEqual([]);
-  expect(endState[todoListId2]).toEqual([]);
+  expect(keys.length).toBe(2);
+  expect(endState[todoListId1]).toStrictEqual([]);
+  expect(endState[todoListId2]).toStrictEqual([]);
 });
 
 test('Tasks for specific todo list are set to app state correctly', () => {

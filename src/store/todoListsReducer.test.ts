@@ -6,7 +6,7 @@ import {
   setTodoListsAC,
   todoListsReducer
 } from './todoListsReducer';
-import type { TodoListFilterValues, TodoListDomainType } from '../models/todo';
+import type { TodoListFilterValues, TodoListDomainType, TodoListType } from '../models/todo';
 import { v1 } from 'uuid';
 
 let todoListId1: string;
@@ -36,13 +36,13 @@ beforeEach(() => {
 });
 
 test('Todo list is correctly added', () => {
-  const newTodolistTitle = "New Todolist";
-  const action = addTodoListAC(newTodolistTitle);
+  const newTodo: TodoListType = { id: v1(), title: "New Todolist", addedDate: "", order: 0 };
+  const action = addTodoListAC(newTodo);
 
   const endState = todoListsReducer(startState, action);
 
   expect(endState.length).toBe(3);
-  expect(endState[2].title).toBe(newTodolistTitle);
+  expect(endState[2].title).toBe(newTodo.title);
 });
 
 test('Todo list title changes correctly', () => {

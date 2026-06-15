@@ -4,7 +4,7 @@ import AddItemForm from './components/UI/AddItemForm/AddItemForm';
 import ToDoList from './components/ToDoList';
 import { Container, Grid, Paper } from '@mui/material';
 import {
-  addTodoListAC,
+  addTodoListTC,
   changeTodoListFilterAC,
   changeTodoListTitleAC,
   fetchTodoLists,
@@ -31,7 +31,7 @@ const App: FC = () => {
   }, []);
 
   const addTodoList = useCallback((title: string) => {
-    dispatch(addTodoListAC(title));
+    dispatch(addTodoListTC(title));
   }, []);
 
   const changeTodoListTitle = useCallback((id: string, title: string) => {

@@ -97,7 +97,7 @@ export const tasksReducer = (state: TasksStateType = initState, action: TaskActi
       return updatedState;
     }
     case TODOLIST_ACTION_TYPES.ADD:
-      return { ...state, [action.id]: [] };
+      return { ...state, [action.newTodo.id]: [] };
     case TODOLIST_ACTION_TYPES.REMOVE:
       const updatedState = { ...state };
       delete updatedState[action.id];

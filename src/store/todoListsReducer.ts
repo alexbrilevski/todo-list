@@ -1,6 +1,5 @@
 import type { Dispatch } from 'redux';
 import type { TodoListFilterValues, TodoListDomainType, TodoListType } from '../models/todo';
-import { v1 } from 'uuid';
 import { todoListsApi } from '../api/todoListsApi';
 
 export const TODOLIST_ACTION_TYPES = {
@@ -33,7 +32,7 @@ export const todoListsReducer = (state: Array<TodoListDomainType> = initState, a
     case TODOLIST_ACTION_TYPES.ADD:
       return [
         ...state,
-        { id: action.id, title: action.title, addedDate: "", order: 0, filter: 'all' },
+        { ...action.newTodo, filter: 'all' },
       ];
     case TODOLIST_ACTION_TYPES.CHANGE_TITLE:
       return state.map(todo => todo.id === action.id ?
@@ -52,8 +51,8 @@ export const setTodoListsAC = (todos: Array<TodoListType>) => {
   return { type: TODOLIST_ACTION_TYPES.SET_TODOS, todos };
 };
 
-export const addTodoListAC = (title: string) => {
-  return { type: TODOLIST_ACTION_TYPES.ADD, id: v1(), title };
+export const addTodoListAC = (newTodo: TodoListType) => {
+  return { type: TODOLIST_ACTION_TYPES.ADD, newTodo };
 };
 
 export const changeTodoListTitleAC = (id: string, title: string) => {
@@ -72,6 +71,16 @@ export const fetchTodoLists = () => {
   return (dispatch: Dispatch) => {
     todoListsApi.getTodolists().then(response => {
       dispatch(setTodoListsAC(response.data));
+    });
+  };
+};
+
+export const addTodoListTC = (title: string) => {
+  return (dispatch: Dispatch) => {
+    todoListsApi.createTodolist(title).then(response => {
+      if (response.data) {
+        dispatch(addTodoListAC(response.data.data.item));
+      }
     });
   };
 };
