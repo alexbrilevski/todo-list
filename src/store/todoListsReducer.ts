@@ -84,3 +84,23 @@ export const addTodoListTC = (title: string) => {
     });
   };
 };
+
+export const changeTodoListTitleTC = (id: string, title: string) => {
+  return (dispatch: Dispatch) => {
+    todoListsApi.updateTodolistTitle(id, title).then(response => {
+      if (response.data) {
+        dispatch(changeTodoListTitleAC(id, title));
+      }
+    });
+  };
+};
+
+export const removeTodoListTC = (id: string) => {
+  return (dispatch: Dispatch) => {
+    todoListsApi.deleteTodolist(id).then(response => {
+      if (response.data) {
+        dispatch(removeTodoListAC(id));
+      }
+    });
+  };
+};

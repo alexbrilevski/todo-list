@@ -6,9 +6,9 @@ import { Container, Grid, Paper } from '@mui/material';
 import {
   addTodoListTC,
   changeTodoListFilterAC,
-  changeTodoListTitleAC,
+  changeTodoListTitleTC,
   fetchTodoLists,
-  removeTodoListAC,
+  removeTodoListTC,
 } from './store/todoListsReducer';
 import {
   addTaskAC,
@@ -35,7 +35,7 @@ const App: FC = () => {
   }, []);
 
   const changeTodoListTitle = useCallback((id: string, title: string) => {
-    dispatch(changeTodoListTitleAC(id, title));
+    dispatch(changeTodoListTitleTC(id, title));
   }, []);
 
   const changeTodoListFilter = useCallback((id: string, filter: TodoListFilterValues) => {
@@ -43,7 +43,7 @@ const App: FC = () => {
   }, []);
 
   const removeTodoList = useCallback((id: string) => {
-    dispatch(removeTodoListAC(id));
+    dispatch(removeTodoListTC(id));
   }, []);
 
   const addTask = useCallback((todoId: string, title: string) => {
