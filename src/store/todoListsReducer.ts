@@ -31,8 +31,8 @@ export const todoListsReducer = (state: Array<TodoListDomainType> = initState, a
       return action.todos.map(todo => ({ ...todo, filter: 'all' }));
     case TODOLIST_ACTION_TYPES.ADD:
       return [
-        ...state,
         { ...action.newTodo, filter: 'all' },
+        ...state,
       ];
     case TODOLIST_ACTION_TYPES.CHANGE_TITLE:
       return state.map(todo => todo.id === action.id ?

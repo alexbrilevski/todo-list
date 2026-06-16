@@ -42,7 +42,7 @@ test('Todo list is correctly added', () => {
   const endState = todoListsReducer(startState, action);
 
   expect(endState.length).toBe(3);
-  expect(endState[2].title).toBe(newTodo.title);
+  expect(endState[0].title).toBe(newTodo.title);
 });
 
 test('Todo list title changes correctly', () => {
