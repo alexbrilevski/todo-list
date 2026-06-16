@@ -1,7 +1,6 @@
 import {
   addTaskAC,
-  changeTaskStatusAC,
-  changeTaskTitleAC,
+  updateTaskAC,
   removeTaskAC,
   setTasksAC,
   tasksReducer,
@@ -43,7 +42,7 @@ beforeEach(() => {
       },
       {
         id: '2', title: 'Milk', todoListId: todoListId2, description: '',
-        status: TaskStatuses.New, priority: TaskPriorities.Low,
+        status: TaskStatuses.Completed, priority: TaskPriorities.Low,
         startDate: '', deadline: '', addedDate: '', order: 0,
       },
       {
@@ -86,7 +85,7 @@ test('Task title changes correctly in specified Todo list', () => {
   const todoId = 'todoListId2';
   const taskId = '2';
   const newTaskTitle = 'Coffee';
-  const action = changeTaskTitleAC(todoId, taskId, newTaskTitle);
+  const action = updateTaskAC(todoId, taskId, { title: newTaskTitle });
 
   const endState = tasksReducer(startState, action);
 
@@ -98,7 +97,7 @@ test('Task status changes correctly in specified Todo list', () => {
   const todoId = todoListId2;
   const taskId = '2';
   const status = TaskStatuses.New;
-  const action = changeTaskStatusAC(todoId, taskId, status);
+  const action = updateTaskAC(todoId, taskId, { status });
 
   const endState = tasksReducer(startState, action);
 

@@ -1,6 +1,5 @@
 import type { Dispatch } from 'redux';
 import {
-  type TaskStatus,
   type TaskType
 } from '../models/task';
 import {
@@ -9,13 +8,13 @@ import {
   type RemovedTodoListAction,
   type SetTodoListsAction
 } from './todoListsReducer';
-import { todoListsApi } from '../api/todoListsApi';
+import { todoListsApi, type UpdateTaskRequestData } from '../api/todoListsApi';
+import type { RootState } from './store';
 
 const TASK_ACTION_TYPES = {
   SET_TAKS: 'task/SET_TASKS',
   ADD: 'task/ADD',
-  CHANGE_TITLE: 'task/CHANGE_TITLE',
-  CHANGE_STATUS: 'task/CHANGE_STATUS',
+  UPDATE: 'task/UPDATE',
   REMOVE: 'task/REMOVE',
 } as const;
 
@@ -23,17 +22,17 @@ export type TasksStateType = {
   [key: string]: Array<TaskType>,
 };
 
+type UpdateTaskModel = Partial<UpdateTaskRequestData>;
+
 type SetTasksAction = ReturnType<typeof setTasksAC>;
 type AddTaskAction = ReturnType<typeof addTaskAC>;
-type ChangeTaskTitleAction = ReturnType<typeof changeTaskTitleAC>;
-type ChangeTaskStatusAction = ReturnType<typeof changeTaskStatusAC>;
+type UpdateTaskAction = ReturnType<typeof updateTaskAC>;
 type RemovedTaskAction = ReturnType<typeof removeTaskAC>;
 
 export type TaskActions =
   SetTasksAction |
   AddTaskAction |
-  ChangeTaskTitleAction |
-  ChangeTaskStatusAction |
+  UpdateTaskAction |
   RemovedTaskAction |
   SetTodoListsAction |
   AddTodoListAction |
@@ -56,18 +55,11 @@ export const tasksReducer = (state: TasksStateType = initState, action: TaskActi
           ...state[action.newTask.todoListId],
         ],
       };
-    case TASK_ACTION_TYPES.CHANGE_TITLE:
+    case TASK_ACTION_TYPES.UPDATE:
       return {
         ...state,
         [action.todoId]: state[action.todoId].map(task =>
-          task.id === action.taskId ? { ...task, title: action.title } : task
-        ),
-      };
-    case TASK_ACTION_TYPES.CHANGE_STATUS:
-      return {
-        ...state,
-        [action.todoId]: state[action.todoId].map(task =>
-          task.id === action.taskId ? { ...task, status: action.status } : task
+          task.id === action.taskId ? { ...task, ...action.taskModel } : task
         ),
       };
     case TASK_ACTION_TYPES.REMOVE:
@@ -99,12 +91,8 @@ export const addTaskAC = (newTask: TaskType) => {
   return { type: TASK_ACTION_TYPES.ADD, newTask };
 };
 
-export const changeTaskTitleAC = (todoId: string, taskId: string, title: string) => {
-  return { type: TASK_ACTION_TYPES.CHANGE_TITLE, todoId, taskId, title };
-};
-
-export const changeTaskStatusAC = (todoId: string, taskId: string, status: TaskStatus) => {
-  return { type: TASK_ACTION_TYPES.CHANGE_STATUS, todoId, taskId, status };
+export const updateTaskAC = (todoId: string, taskId: string, taskModel: UpdateTaskModel) => {
+  return { type: TASK_ACTION_TYPES.UPDATE, todoId, taskId, taskModel };
 };
 
 export const removeTaskAC = (todoId: string, taskId: string) => {
@@ -126,5 +114,21 @@ export const addTaskTC = (todoListId: string, title: string) => {
         dispatch(addTaskAC(response.data.data.item));
       }
     });
+  };
+};
+
+export const updateTaskTC = (todoListId: string, taskId: string, taskModel: UpdateTaskModel) => {
+  return (dispatch: Dispatch, getState: () => RootState) => {
+    const taskToUpdate = getState().tasks[todoListId].find(task => task.id === taskId);
+
+    if (taskToUpdate) {
+      const updateRequestTaskModel = { ...taskToUpdate, ...taskModel };
+
+      todoListsApi.updateTask(todoListId, taskId, updateRequestTaskModel).then(response => {
+        if (response.data) {
+          dispatch(updateTaskAC(todoListId, taskId, taskModel));
+        }
+      });
+    }
   };
 };

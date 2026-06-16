@@ -12,8 +12,7 @@ import {
 } from './store/todoListsReducer';
 import {
   addTaskTC,
-  changeTaskStatusAC,
-  changeTaskTitleAC,
+  updateTaskTC,
   removeTaskAC,
   type TasksStateType,
 } from './store/tasksReducer';
@@ -51,11 +50,11 @@ const App: FC = () => {
   }, []);
 
   const changeTaskTitle = useCallback((todoId: string, taskId: string, title: string) => {
-    dispatch(changeTaskTitleAC(todoId, taskId, title));
+    dispatch(updateTaskTC(todoId, taskId, { title }));
   }, []);
 
   const changeTaskStatus = useCallback((todoId: string, taskId: string, status: TaskStatus) => {
-    dispatch(changeTaskStatusAC(todoId, taskId, status));
+    dispatch(updateTaskTC(todoId, taskId, { status }));
   }, []);
 
   const removeTask = useCallback((todoId: string, taskId: string) => {

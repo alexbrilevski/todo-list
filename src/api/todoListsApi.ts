@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { TodoListType } from '../models/todo';
-import type { TaskType } from '../models/task';
+import type { TaskType, TaskPriority, TaskStatus } from '../models/task';
 
 type ResponseData<D = {}> = {
   data: D,
@@ -18,8 +18,8 @@ type GetTasksResponseData = {
 export type UpdateTaskRequestData = {
   title: string,
   description: string,
-  status: number,
-  priority: number,
+  status: TaskStatus,
+  priority: TaskPriority,
   startDate: string,
   deadline: string,
 };
@@ -71,8 +71,8 @@ export const todoListsApi = {
     return baseInstance
       .delete<ResponseData>(`todo-lists/${todoListId}/tasks/${taskId}`);
   },
-  updateTask(todoListId: string, taskId: string, task: UpdateTaskRequestData) {
+  updateTask(todoListId: string, taskId: string, taskModel: UpdateTaskRequestData) {
     return baseInstance
-      .put<ResponseData<{ item: TaskType }>>(`todo-lists/${todoListId}/tasks/${taskId}`, task);
+      .put<ResponseData<{ item: TaskType }>>(`todo-lists/${todoListId}/tasks/${taskId}`, taskModel);
   },
 };
