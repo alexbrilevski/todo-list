@@ -11,7 +11,7 @@ import {
   removeTodoListTC,
 } from './store/todoListsReducer';
 import {
-  addTaskAC,
+  addTaskTC,
   changeTaskStatusAC,
   changeTaskTitleAC,
   removeTaskAC,
@@ -47,7 +47,7 @@ const App: FC = () => {
   }, []);
 
   const addTask = useCallback((todoId: string, title: string) => {
-    dispatch(addTaskAC(todoId, title));
+    dispatch(addTaskTC(todoId, title));
   }, []);
 
   const changeTaskTitle = useCallback((todoId: string, taskId: string, title: string) => {

@@ -1,7 +1,5 @@
 import type { Dispatch } from 'redux';
 import {
-  TaskPriorities,
-  TaskStatuses,
   type TaskStatus,
   type TaskType
 } from '../models/task';
@@ -11,7 +9,6 @@ import {
   type RemovedTodoListAction,
   type SetTodoListsAction
 } from './todoListsReducer';
-import { v1 } from 'uuid';
 import { todoListsApi } from '../api/todoListsApi';
 
 const TASK_ACTION_TYPES = {
@@ -52,24 +49,11 @@ export const tasksReducer = (state: TasksStateType = initState, action: TaskActi
       return updatedState;
     }
     case TASK_ACTION_TYPES.ADD:
-      const newTask: TaskType = {
-        id: v1(),
-        todoListId: action.todoId,
-        title: action.title,
-        description: '',
-        status: TaskStatuses.New,
-        priority: TaskPriorities.Middle,
-        startDate: '',
-        deadline: '',
-        addedDate: '',
-        order: 0,
-      };
-
       return {
         ...state,
-        [action.todoId]: [
-          ...state[action.todoId],
-          newTask,
+        [action.newTask.todoListId]: [
+          action.newTask,
+          ...state[action.newTask.todoListId],
         ],
       };
     case TASK_ACTION_TYPES.CHANGE_TITLE:
@@ -111,8 +95,8 @@ export const setTasksAC = (todoListId: string, tasks: Array<TaskType>) => {
   return { type: TASK_ACTION_TYPES.SET_TAKS, todoListId, tasks };
 };
 
-export const addTaskAC = (todoId: string, title: string) => {
-  return { type: TASK_ACTION_TYPES.ADD, todoId, title };
+export const addTaskAC = (newTask: TaskType) => {
+  return { type: TASK_ACTION_TYPES.ADD, newTask };
 };
 
 export const changeTaskTitleAC = (todoId: string, taskId: string, title: string) => {
@@ -131,6 +115,16 @@ export const fetchTasks = (todoListId: string) => {
   return (dispatch: Dispatch) => {
     todoListsApi.getTasks(todoListId).then(response => {
       dispatch(setTasksAC(todoListId, response.data.items));
+    });
+  };
+};
+
+export const addTaskTC = (todoListId: string, title: string) => {
+  return (dispatch: Dispatch) => {
+    todoListsApi.createTask(todoListId, title).then(response => {
+      if (response.data) {
+        dispatch(addTaskAC(response.data.data.item));
+      }
     });
   };
 };

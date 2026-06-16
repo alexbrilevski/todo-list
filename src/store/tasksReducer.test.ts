@@ -9,7 +9,7 @@ import {
 } from './tasksReducer';
 import type { TodoListDomainType, TodoListType } from '../models/todo';
 import { addTodoListAC, removeTodoListAC, setTodoListsAC, todoListsReducer } from './todoListsReducer';
-import { TaskPriorities, TaskStatuses } from '../models/task';
+import { TaskPriorities, TaskStatuses, type TaskType } from '../models/task';
 import { v1 } from 'uuid';
 
 const todoListId1: string = 'todoListId1';
@@ -56,17 +56,30 @@ beforeEach(() => {
 });
 
 test('Task is correctly added to specified Todo list', () => {
+  const newTaskId = v1();
   const todoId = todoListId2;
   const newTaskTitle = 'Juce';
-  const action = addTaskAC(todoId, newTaskTitle);
+  const newTask: TaskType = {
+    id: newTaskId,
+    todoListId: todoListId2,
+    title: newTaskTitle,
+    description: '',
+    status: TaskStatuses.New,
+    priority: TaskPriorities.Low,
+    startDate: '',
+    deadline: '',
+    addedDate: '',
+    order: 0,
+  };
+  const action = addTaskAC(newTask);
 
   const endState = tasksReducer(startState, action);
 
   expect(endState[todoListId1].length).toBe(3);
   expect(endState[todoId].length).toBe(4);
-  expect(endState[todoId][3].id).toBeDefined();
-  expect(endState[todoId][3].title).toBe(newTaskTitle);
-  expect(endState[todoId][3].status).toBe(TaskStatuses.New);
+  expect(endState[todoId][0].id).toBe(newTaskId);
+  expect(endState[todoId][0].title).toBe(newTaskTitle);
+  expect(endState[todoId][0].status).toBe(TaskStatuses.New);
 });
 
 test('Task title changes correctly in specified Todo list', () => {
