@@ -132,3 +132,13 @@ export const updateTaskTC = (todoListId: string, taskId: string, taskModel: Upda
     }
   };
 };
+
+export const deleteTaskTC = (todoId: string, taskId: string) => {
+  return (dispatch: Dispatch) => {
+    todoListsApi.deleteTask(todoId, taskId).then(response => {
+      if (response.data) {
+        dispatch(removeTaskAC(todoId, taskId));
+      }
+    });
+  };
+};

@@ -13,7 +13,7 @@ import {
 import {
   addTaskTC,
   updateTaskTC,
-  removeTaskAC,
+  deleteTaskTC,
   type TasksStateType,
 } from './store/tasksReducer';
 import { useAppDispatch, useAppSelector } from './store/store';
@@ -58,7 +58,7 @@ const App: FC = () => {
   }, []);
 
   const removeTask = useCallback((todoId: string, taskId: string) => {
-    dispatch(removeTaskAC(todoId, taskId));
+    dispatch(deleteTaskTC(todoId, taskId));
   }, []);
 
   return (
