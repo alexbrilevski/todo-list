@@ -78,7 +78,7 @@ export const fetchTodoLists = () => {
 export const addTodoListTC = (title: string) => {
   return (dispatch: Dispatch) => {
     todoListsApi.createTodolist(title).then(response => {
-      if (response.data) {
+      if (response.data.resultCode === 0) {
         dispatch(addTodoListAC(response.data.data.item));
       }
     });
@@ -88,7 +88,7 @@ export const addTodoListTC = (title: string) => {
 export const changeTodoListTitleTC = (id: string, title: string) => {
   return (dispatch: Dispatch) => {
     todoListsApi.updateTodolistTitle(id, title).then(response => {
-      if (response.data) {
+      if (response.data.resultCode === 0) {
         dispatch(changeTodoListTitleAC(id, title));
       }
     });
@@ -98,7 +98,7 @@ export const changeTodoListTitleTC = (id: string, title: string) => {
 export const removeTodoListTC = (id: string) => {
   return (dispatch: Dispatch) => {
     todoListsApi.deleteTodolist(id).then(response => {
-      if (response.data) {
+      if (response.data.resultCode === 0) {
         dispatch(removeTodoListAC(id));
       }
     });

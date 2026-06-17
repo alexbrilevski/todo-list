@@ -110,7 +110,7 @@ export const fetchTasks = (todoListId: string) => {
 export const addTaskTC = (todoListId: string, title: string) => {
   return (dispatch: Dispatch) => {
     todoListsApi.createTask(todoListId, title).then(response => {
-      if (response.data) {
+      if (response.data.resultCode === 0) {
         dispatch(addTaskAC(response.data.data.item));
       }
     });
@@ -125,7 +125,7 @@ export const updateTaskTC = (todoListId: string, taskId: string, taskModel: Upda
       const updateRequestTaskModel = { ...taskToUpdate, ...taskModel };
 
       todoListsApi.updateTask(todoListId, taskId, updateRequestTaskModel).then(response => {
-        if (response.data) {
+        if (response.data.resultCode === 0) {
           dispatch(updateTaskAC(todoListId, taskId, taskModel));
         }
       });
@@ -136,7 +136,7 @@ export const updateTaskTC = (todoListId: string, taskId: string, taskModel: Upda
 export const deleteTaskTC = (todoId: string, taskId: string) => {
   return (dispatch: Dispatch) => {
     todoListsApi.deleteTask(todoId, taskId).then(response => {
-      if (response.data) {
+      if (response.data.resultCode === 0) {
         dispatch(removeTaskAC(todoId, taskId));
       }
     });
