@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { v1 } from "uuid";
-import { combineReducers, createStore } from "redux";
+import { applyMiddleware, combineReducers, createStore } from "redux";
 import { Provider } from "react-redux";
+import { thunk } from "redux-thunk";
 import { todoListsReducer } from "./store/todoListsReducer";
 import { tasksReducer } from "./store/tasksReducer";
 import type { RootState } from "./store/store";
@@ -52,7 +53,7 @@ const rootReducer = combineReducers({
   tasks: tasksReducer,
 });
 
-const mockStore = createStore(rootReducer, mockPreloadedState as RootState);
+const mockStore = createStore(rootReducer, mockPreloadedState as RootState, applyMiddleware(thunk));
 
 const meta = {
   title: "TodoList/App",
