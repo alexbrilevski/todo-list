@@ -10,6 +10,7 @@ import {
 } from './todoListsReducer';
 import { todoListsApi, type UpdateTaskRequestData } from '../api/todoListsApi';
 import type { RootState } from './store';
+import { setAppStatusAC } from './appReducer';
 
 const TASK_ACTION_TYPES = {
   SET_TAKS: 'task/SET_TASKS',
@@ -101,17 +102,21 @@ export const removeTaskAC = (todoId: string, taskId: string) => {
 
 export const fetchTasks = (todoListId: string) => {
   return (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'));
     todoListsApi.getTasks(todoListId).then(response => {
       dispatch(setTasksAC(todoListId, response.data.items));
+      dispatch(setAppStatusAC('succeeded'));
     });
   };
 };
 
 export const addTaskTC = (todoListId: string, title: string) => {
   return (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'));
     todoListsApi.createTask(todoListId, title).then(response => {
       if (response.data.resultCode === 0) {
         dispatch(addTaskAC(response.data.data.item));
+        dispatch(setAppStatusAC('succeeded'));
       }
     });
   };
@@ -124,9 +129,11 @@ export const updateTaskTC = (todoListId: string, taskId: string, taskModel: Upda
     if (taskToUpdate) {
       const updateRequestTaskModel = { ...taskToUpdate, ...taskModel };
 
+      dispatch(setAppStatusAC('loading'));
       todoListsApi.updateTask(todoListId, taskId, updateRequestTaskModel).then(response => {
         if (response.data.resultCode === 0) {
           dispatch(updateTaskAC(todoListId, taskId, taskModel));
+          dispatch(setAppStatusAC('succeeded'));
         }
       });
     }
@@ -135,9 +142,11 @@ export const updateTaskTC = (todoListId: string, taskId: string, taskModel: Upda
 
 export const deleteTaskTC = (todoId: string, taskId: string) => {
   return (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'));
     todoListsApi.deleteTask(todoId, taskId).then(response => {
       if (response.data.resultCode === 0) {
         dispatch(removeTaskAC(todoId, taskId));
+        dispatch(setAppStatusAC('succeeded'));
       }
     });
   };

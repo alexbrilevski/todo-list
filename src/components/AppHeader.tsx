@@ -1,12 +1,17 @@
 import type { FC } from 'react';
-import { AppBar, Button, Toolbar } from '@mui/material';
+import { useAppSelector } from '../store/store';
+import type { RequestStatus } from '../store/appReducer';
+import { AppBar, Button, LinearProgress, Toolbar } from '@mui/material';
 
 const AppHeader: FC = () => {
+  const status = useAppSelector<RequestStatus>(state => state.app.status);
+
   return (
     <AppBar position="static">
       <Toolbar>
         <Button color="inherit">Login</Button>
       </Toolbar>
+      {status === 'loading' && <LinearProgress color='info'/>}
     </AppBar>
   );
 };

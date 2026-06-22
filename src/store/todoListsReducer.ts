@@ -1,6 +1,7 @@
 import type { Dispatch } from 'redux';
 import type { TodoListFilterValues, TodoListDomainType, TodoListType } from '../models/todo';
 import { todoListsApi } from '../api/todoListsApi';
+import { setAppStatusAC } from './appReducer';
 
 export const TODOLIST_ACTION_TYPES = {
   SET_TODOS: 'todoList/SET_TODOS',
@@ -69,17 +70,21 @@ export const removeTodoListAC = (id: string) => {
 
 export const fetchTodoLists = () => {
   return (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'));
     todoListsApi.getTodolists().then(response => {
       dispatch(setTodoListsAC(response.data));
+      dispatch(setAppStatusAC('succeeded'));
     });
   };
 };
 
 export const addTodoListTC = (title: string) => {
   return (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'));
     todoListsApi.createTodolist(title).then(response => {
       if (response.data.resultCode === 0) {
         dispatch(addTodoListAC(response.data.data.item));
+        dispatch(setAppStatusAC('succeeded'));
       }
     });
   };
@@ -87,9 +92,11 @@ export const addTodoListTC = (title: string) => {
 
 export const changeTodoListTitleTC = (id: string, title: string) => {
   return (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'));
     todoListsApi.updateTodolistTitle(id, title).then(response => {
       if (response.data.resultCode === 0) {
         dispatch(changeTodoListTitleAC(id, title));
+        dispatch(setAppStatusAC('succeeded'));
       }
     });
   };
@@ -97,9 +104,11 @@ export const changeTodoListTitleTC = (id: string, title: string) => {
 
 export const removeTodoListTC = (id: string) => {
   return (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'));
     todoListsApi.deleteTodolist(id).then(response => {
       if (response.data.resultCode === 0) {
         dispatch(removeTodoListAC(id));
+        dispatch(setAppStatusAC('succeeded'));
       }
     });
   };
