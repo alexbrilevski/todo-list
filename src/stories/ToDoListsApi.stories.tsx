@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { todoListsApi, type UpdateTaskRequestData } from '../api/todoListsApi';
+import type { TaskPriority, TaskStatus } from '../models/task';
 
 export default {
   title: 'TodoList/API',
@@ -344,8 +345,8 @@ export const UpdateTask = () => {
       setTask({
         title: titleValue,
         description: descriptionValue,
-        status: +statusValue,
-        priority: +priorityValue,
+        status: +statusValue as TaskStatus,
+        priority: +priorityValue as TaskPriority,
         startDate: startDateValue,
         deadline: deadlineValue,
       });

@@ -81,7 +81,6 @@ const ToDoList: FC<ToDoListProps> = memo(({
         {filteredTasks.map(task =>
           <li key={task.id}>
             <Task
-              todoId={id}
               task={task}
               changeTaskTitle={changeTaskTitle}
               changeTaskStatus={changeTaskStatus}

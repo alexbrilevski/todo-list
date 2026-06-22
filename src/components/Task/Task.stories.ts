@@ -35,7 +35,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Active: Story = {
   args: {
-    todoId: "TodoListId1",
     task: {
       id: "1", todoListId: "TodoListId1", title: "Task title", description: '',
       status: TaskStatuses.New, priority: TaskPriorities.Low,
@@ -46,7 +45,6 @@ export const Active: Story = {
 
 export const Completed: Story = {
   args: {
-    todoId: "TodoListId1",
     task: {
       id: "1", todoListId: "TodoListId1", title: "Task title", description: '',
       status: TaskStatuses.Completed, priority: TaskPriorities.Low,

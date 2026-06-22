@@ -5,7 +5,6 @@ import { Checkbox, IconButton } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 
 type TaskProps = {
-  todoId: string,
   task: TaskType,
   changeTaskTitle: (todoId: string, id: string, title: string) => void,
   changeTaskStatus: (todoId: string, id: string, status: TaskStatus) => void,
@@ -13,21 +12,20 @@ type TaskProps = {
 };
 
 const Task: FC<TaskProps> = memo(({
-  todoId,
   task,
   changeTaskTitle,
   changeTaskStatus,
   removeTask,
 }) => {
-  const { id, title, status } = task;
+  const { id, todoListId, title, status } = task;
 
   const onChangeTaskTitle = useCallback((title: string) => {
-    changeTaskTitle(todoId, id, title);
-  }, [changeTaskTitle, todoId, id]);
+    changeTaskTitle(todoListId, id, title);
+  }, [changeTaskTitle, todoListId, id]);
 
   const onChangeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
     const newStatus = e.target.checked ? TaskStatuses.Completed : TaskStatuses.New;
-    changeTaskStatus(todoId, id, newStatus);
+    changeTaskStatus(todoListId, id, newStatus);
   };
 
   return (
@@ -38,7 +36,7 @@ const Task: FC<TaskProps> = memo(({
         onChange={onChangeTaskStatus}
       />
       <EditableSpan text={title} onChangeText={onChangeTaskTitle} />
-      <IconButton onClick={() => removeTask(todoId, id)}>
+      <IconButton onClick={() => removeTask(todoListId, id)}>
         <Delete />
       </IconButton>
     </div>
