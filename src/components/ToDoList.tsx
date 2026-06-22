@@ -21,6 +21,7 @@ type ToDoListProps = {
   changeTaskStatus: (id: string, taskId: string, status: TaskStatus) => void,
   removeTask: (id: string, taskId: string) => void,
   changeFilter: (id: string, filter: TodoListFilterValues) => void,
+  isDemo?: boolean,
 };
 
 const ToDoList: FC<ToDoListProps> = memo(({
@@ -35,10 +36,13 @@ const ToDoList: FC<ToDoListProps> = memo(({
   changeTaskStatus,
   removeTask,
   changeFilter,
+  isDemo = false,
 }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    if (isDemo) return;
+
     dispatch(fetchTasks(id));
   }, [id]);
 

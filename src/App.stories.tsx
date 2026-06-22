@@ -3,6 +3,7 @@ import { v1 } from "uuid";
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import { Provider } from "react-redux";
 import { thunk } from "redux-thunk";
+import { appReducer } from "./store/appReducer";
 import { todoListsReducer } from "./store/todoListsReducer";
 import { tasksReducer } from "./store/tasksReducer";
 import type { RootState } from "./store/store";
@@ -11,6 +12,9 @@ import { TaskPriorities, TaskStatuses } from "./models/task";
 import App from "./App";
 
 const mockPreloadedState = {
+  app: {
+    status: "idle",
+  },
   todos: [
     { id: "todolistId1", title: "What to Learn", addedDate: "", order: 0, filter: "all" },
     { id: "todolistId2", title: "What to Buy", addedDate: "", order: 1, filter: "all" },
@@ -49,6 +53,7 @@ const mockPreloadedState = {
 };
 
 const rootReducer = combineReducers({
+  app: appReducer,
   todos: todoListsReducer,
   tasks: tasksReducer,
 });
@@ -76,4 +81,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    isDemo: true,
+  }
+};

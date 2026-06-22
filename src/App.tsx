@@ -20,12 +20,18 @@ import { useAppDispatch, useAppSelector } from './store/store';
 import type { TodoListFilterValues, TodoListDomainType } from './models/todo';
 import type { TaskStatus } from './models/task';
 
-const App: FC = () => {
+type AppProps = {
+  isDemo?: boolean,
+};
+
+const App: FC<AppProps> = ({ isDemo = false }) => {
   const todos = useAppSelector<Array<TodoListDomainType>>(state => state.todos);
   const tasks = useAppSelector<TasksStateType>(state => state.tasks);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    if (isDemo) return;
+
     dispatch(fetchTodoLists());
   }, []);
 
@@ -85,6 +91,7 @@ const App: FC = () => {
                     changeTaskStatus={changeTaskStatus}
                     removeTask={removeTask}
                     changeFilter={changeTodoListFilter}
+                    isDemo={isDemo}
                   />
                 </Paper>
               </Grid>
