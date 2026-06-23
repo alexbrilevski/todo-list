@@ -1,4 +1,5 @@
 import { useCallback, useEffect, type FC } from 'react';
+import ErrorSnackbar from './components/UI/ErrorSnackbar/ErrorSnackbar';
 import AppHeader from './components/AppHeader';
 import AddItemForm from './components/UI/AddItemForm/AddItemForm';
 import ToDoList from './components/ToDoList';
@@ -69,6 +70,7 @@ const App: FC<AppProps> = ({ isDemo = false }) => {
 
   return (
     <div className="App">
+      <ErrorSnackbar/>
       <AppHeader />
       <Container fixed>
         <Grid container style={{ padding: "20px" }}>

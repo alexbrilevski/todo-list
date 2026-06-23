@@ -1,7 +1,7 @@
 import type { Dispatch } from 'redux';
 import type { TodoListFilterValues, TodoListDomainType, TodoListType } from '../models/todo';
 import { todoListsApi } from '../api/todoListsApi';
-import { setAppStatusAC } from './appReducer';
+import { setAppErrorAC, setAppStatusAC } from './appReducer';
 
 export const TODOLIST_ACTION_TYPES = {
   SET_TODOS: 'todoList/SET_TODOS',
@@ -85,6 +85,13 @@ export const addTodoListTC = (title: string) => {
       if (response.data.resultCode === 0) {
         dispatch(addTodoListAC(response.data.data.item));
         dispatch(setAppStatusAC('succeeded'));
+      } else {
+        if (response.data.messages.length) {
+          dispatch(setAppErrorAC(response.data.messages[0]));
+        } else {
+          dispatch(setAppErrorAC('An unknown error occurred'));
+        }
+        dispatch(setAppStatusAC('failed'));
       }
     });
   };
@@ -97,6 +104,13 @@ export const changeTodoListTitleTC = (id: string, title: string) => {
       if (response.data.resultCode === 0) {
         dispatch(changeTodoListTitleAC(id, title));
         dispatch(setAppStatusAC('succeeded'));
+      } else {
+        if (response.data.messages.length) {
+          dispatch(setAppErrorAC(response.data.messages[0]));
+        } else {
+          dispatch(setAppErrorAC('An unknown error occurred'));
+        }
+        dispatch(setAppStatusAC('failed'));
       }
     });
   };
@@ -109,6 +123,13 @@ export const removeTodoListTC = (id: string) => {
       if (response.data.resultCode === 0) {
         dispatch(removeTodoListAC(id));
         dispatch(setAppStatusAC('succeeded'));
+      } else {
+        if (response.data.messages.length) {
+          dispatch(setAppErrorAC(response.data.messages[0]));
+        } else {
+          dispatch(setAppErrorAC('An unknown error occurred'));
+        }
+        dispatch(setAppStatusAC('failed'));
       }
     });
   };

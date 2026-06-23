@@ -14,6 +14,7 @@ import App from "./App";
 const mockPreloadedState = {
   app: {
     status: "idle",
+    error: null,
   },
   todos: [
     { id: "todolistId1", title: "What to Learn", addedDate: "", order: 0, filter: "all" },

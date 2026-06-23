@@ -10,7 +10,7 @@ import {
 } from './todoListsReducer';
 import { todoListsApi, type UpdateTaskRequestData } from '../api/todoListsApi';
 import type { RootState } from './store';
-import { setAppStatusAC } from './appReducer';
+import { setAppErrorAC, setAppStatusAC } from './appReducer';
 
 const TASK_ACTION_TYPES = {
   SET_TAKS: 'task/SET_TASKS',
@@ -117,6 +117,13 @@ export const addTaskTC = (todoListId: string, title: string) => {
       if (response.data.resultCode === 0) {
         dispatch(addTaskAC(response.data.data.item));
         dispatch(setAppStatusAC('succeeded'));
+      } else {
+        if (response.data.messages.length) {
+          dispatch(setAppErrorAC(response.data.messages[0]));
+        } else {
+          dispatch(setAppErrorAC('An unknown error occurred'));
+        }
+        dispatch(setAppStatusAC('failed'));
       }
     });
   };
@@ -134,6 +141,13 @@ export const updateTaskTC = (todoListId: string, taskId: string, taskModel: Upda
         if (response.data.resultCode === 0) {
           dispatch(updateTaskAC(todoListId, taskId, taskModel));
           dispatch(setAppStatusAC('succeeded'));
+        } else {
+          if (response.data.messages.length) {
+            dispatch(setAppErrorAC(response.data.messages[0]));
+          } else {
+            dispatch(setAppErrorAC('An unknown error occurred'));
+          }
+          dispatch(setAppStatusAC('failed'));
         }
       });
     }
@@ -147,6 +161,13 @@ export const deleteTaskTC = (todoId: string, taskId: string) => {
       if (response.data.resultCode === 0) {
         dispatch(removeTaskAC(todoId, taskId));
         dispatch(setAppStatusAC('succeeded'));
+      } else {
+        if (response.data.messages.length) {
+          dispatch(setAppErrorAC(response.data.messages[0]));
+        } else {
+          dispatch(setAppErrorAC('An unknown error occurred'));
+        }
+        dispatch(setAppStatusAC('failed'));
       }
     });
   };

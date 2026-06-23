@@ -1,10 +1,11 @@
-import { appReducer, setAppStatusAC, type AppState, type RequestStatus } from "./appReducer";
+import { appReducer, setAppErrorAC, setAppStatusAC, type AppState, type RequestStatus } from "./appReducer";
 
 let startState: AppState;
 
 beforeEach(() => {
   startState = {
     status: "idle",
+    error: null,
   };
 });
 
@@ -14,4 +15,12 @@ test("App status is set to state correctly", () => {
 
   expect(startState.status).toBe("idle");
   expect(endState.status).toBe(newStatus);
+});
+
+test("Correct error message should be set to state", () => {
+  const error: string | null = "Some error";
+  const endState = appReducer(startState, setAppErrorAC(error));
+
+  expect(startState.error).toBe(null);
+  expect(endState.error).toBe(error);
 });
