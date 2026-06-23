@@ -1,4 +1,5 @@
-import { appReducer, setAppErrorAC, setAppStatusAC, type AppState, type RequestStatus } from "./appReducer";
+import type { RequestStatus } from "../models/app";
+import { appReducer, setAppErrorAC, setAppStatusAC, type AppState } from "./appReducer";
 
 let startState: AppState;
 

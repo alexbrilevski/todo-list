@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, type FC } from 'react';
 import { TaskStatuses, type TaskStatus, type TaskType } from '../models/task';
-import type { TodoListFilterValues } from '../models/todo';
+import type { TodoListDomainType, TodoListFilterValues } from '../models/todo';
 import AddItemForm from './UI/AddItemForm/AddItemForm';
 import Task from './Task/Task';
 import EditableSpan from './UI/EditableSpan/EditableSpan';
@@ -10,10 +10,8 @@ import { useAppDispatch } from '../store/store';
 import { fetchTasks } from '../store/tasksReducer';
 
 type ToDoListProps = {
-  id: string,
-  title: string,
+  todo: TodoListDomainType,
   tasks: Array<TaskType>,
-  filter: TodoListFilterValues,
   changeTodoListTitle: (id: string, title: string) => void
   removeTodoList: (id: string) => void,
   addTask: (id: string, title: string) => void,
@@ -25,10 +23,8 @@ type ToDoListProps = {
 };
 
 const ToDoList: FC<ToDoListProps> = memo(({
-  id,
-  title,
+  todo,
   tasks,
-  filter,
   changeTodoListTitle,
   removeTodoList,
   addTask,
@@ -38,6 +34,7 @@ const ToDoList: FC<ToDoListProps> = memo(({
   changeFilter,
   isDemo = false,
 }) => {
+  const { id, title, filter, entityStatus } = todo;
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -71,12 +68,19 @@ const ToDoList: FC<ToDoListProps> = memo(({
   return (
     <div>
       <h3>
-        <EditableSpan text={title} onChangeText={onChangeTitle} />
-        <IconButton onClick={() => removeTodoList(id)}>
+        <EditableSpan
+          text={title}
+          onChangeText={onChangeTitle}
+          disabled={entityStatus === "loading"}
+        />
+        <IconButton
+          onClick={() => removeTodoList(id)}
+          disabled={entityStatus === "loading"}
+        >
           <Delete />
         </IconButton>
       </h3>
-      <AddItemForm addItem={onAddTask} />
+      <AddItemForm addItem={onAddTask} disabled={entityStatus === "loading"} />
       <ul style={{ listStyle: "none", paddingLeft: 0 }}>
         {filteredTasks.map(task =>
           <li key={task.id}>

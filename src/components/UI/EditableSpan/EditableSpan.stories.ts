@@ -27,3 +27,10 @@ export const Default: Story = {
     text: "Item text",
   }
 };
+
+export const Disabled: Story = {
+  args: {
+    text: "Item text",
+    disabled: true,
+  }
+};

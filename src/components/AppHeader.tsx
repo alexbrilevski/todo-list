@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useAppSelector } from '../store/store';
-import type { RequestStatus } from '../store/appReducer';
+import type { RequestStatus } from '../models/app';
 import { AppBar, Button, LinearProgress, Toolbar } from '@mui/material';
 
 const AppHeader: FC = () => {

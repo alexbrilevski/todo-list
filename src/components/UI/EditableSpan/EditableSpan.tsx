@@ -4,15 +4,18 @@ import { TextField } from '@mui/material';
 type EditableSpanProps = {
   text: string,
   onChangeText: (text: string) => void,
+  disabled?: boolean,
 };
 
-const EditableSpan: FC<EditableSpanProps> = memo(({ text, onChangeText }) => {
+const EditableSpan: FC<EditableSpanProps> = memo(({ text, onChangeText, disabled }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [value, setValue] = useState<string>(text);
   const [error, setError] = useState<string | null>(null);
 
   const enableEditMode = () => {
-    setEditMode(true);
+    if (!disabled) {
+      setEditMode(true);
+    }
   };
 
   const disableEditMode = () => {

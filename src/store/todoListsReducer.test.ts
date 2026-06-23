@@ -1,5 +1,6 @@
 import {
   addTodoListAC,
+  changeTodoListEntityStatusAC,
   changeTodoListFilterAC,
   changeTodoListTitleAC,
   removeTodoListAC,
@@ -7,6 +8,7 @@ import {
   todoListsReducer
 } from './todoListsReducer';
 import type { TodoListFilterValues, TodoListDomainType, TodoListType } from '../models/todo';
+import type { RequestStatus } from '../models/app';
 import { v1 } from 'uuid';
 
 let todoListId1: string;
@@ -24,6 +26,7 @@ beforeEach(() => {
       addedDate: "",
       order: 0,
       filter: "all",
+      entityStatus: "idle",
     },
     {
       id: todoListId2,
@@ -31,6 +34,7 @@ beforeEach(() => {
       addedDate: "",
       order: 1,
       filter: "all",
+      entityStatus: "idle",
     },
   ];
 });
@@ -80,4 +84,13 @@ test('Todo lists are set correctly to app state', () => {
   const endState = todoListsReducer([], action);
 
   expect(endState.length).toBe(2);
+});
+
+test('Todo list entity status changes correctly', () => {
+  const newStatus: RequestStatus = "loading";
+  const action = changeTodoListEntityStatusAC(todoListId2, newStatus);
+  const endState = todoListsReducer(startState, action);
+
+  expect(endState[0].entityStatus).toBe("idle");
+  expect(endState[1].entityStatus).toBe(newStatus);
 });

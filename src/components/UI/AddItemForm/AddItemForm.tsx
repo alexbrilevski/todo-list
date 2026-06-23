@@ -10,9 +10,10 @@ import { Add } from '@mui/icons-material';
 
 type AddItemFormProps = {
   addItem: (title: string) => void,
+  disabled?: boolean,
 };
 
-const AddItemForm: FC<AddItemFormProps> = memo(({ addItem }) => {
+const AddItemForm: FC<AddItemFormProps> = memo(({ addItem, disabled }) => {
   const [itemValue, setItemValue] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
@@ -51,7 +52,11 @@ const AddItemForm: FC<AddItemFormProps> = memo(({ addItem }) => {
           helperText={error}
           size="small"
         />
-        <IconButton color="primary" onClick={addItemHandler}>
+        <IconButton
+          color="primary"
+          onClick={addItemHandler}
+          disabled={disabled}
+        >
           <Add />
         </IconButton>
       </div>

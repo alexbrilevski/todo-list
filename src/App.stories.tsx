@@ -11,14 +11,28 @@ import { TaskPriorities, TaskStatuses } from "./models/task";
 
 import App from "./App";
 
-const mockPreloadedState = {
+const mockPreloadedState: RootState = {
   app: {
     status: "idle",
     error: null,
   },
   todos: [
-    { id: "todolistId1", title: "What to Learn", addedDate: "", order: 0, filter: "all" },
-    { id: "todolistId2", title: "What to Buy", addedDate: "", order: 1, filter: "all" },
+    {
+      id: "todolistId1",
+      title: "What to Learn",
+      addedDate: "",
+      order: 0,
+      filter: "all",
+      entityStatus: 'idle'
+    },
+    {
+      id: "todolistId2",
+      title: "What to Buy",
+      addedDate: "",
+      order: 1,
+      filter: "all",
+      entityStatus: 'idle',
+    },
   ],
   tasks: {
     "todolistId1": [

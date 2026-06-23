@@ -1,3 +1,5 @@
+import type { RequestStatus } from "./app";
+
 export type TodoListFilterValues = 'all' | 'active' | 'completed';
 
 export type TodoListType = {
@@ -7,4 +9,7 @@ export type TodoListType = {
   order: number,
 };
 
-export type TodoListDomainType = TodoListType & { filter: TodoListFilterValues };
+export type TodoListDomainType = TodoListType & {
+  filter: TodoListFilterValues,
+  entityStatus: RequestStatus,
+};

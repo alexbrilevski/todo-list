@@ -82,10 +82,8 @@ const App: FC<AppProps> = ({ isDemo = false }) => {
               <Grid key={todo.id}>
                 <Paper style={{ padding: "10px" }}>
                   <ToDoList
-                    id={todo.id}
-                    title={todo.title}
+                    todo={todo}
                     tasks={tasks[todo.id]}
-                    filter={todo.filter}
                     changeTodoListTitle={changeTodoListTitle}
                     removeTodoList={removeTodoList}
                     addTask={addTask}

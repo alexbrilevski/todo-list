@@ -1,9 +1,9 @@
+import type { RequestStatus } from "../models/app";
+
 const APP_ACTION_TYPES = {
   SET_STATUS: 'app/SET_STATUS',
   SET_ERROR: 'app/SET_ERROR',
 } as const;
-
-export type RequestStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
 export type AppState = {
   status: RequestStatus,
