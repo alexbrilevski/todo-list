@@ -38,7 +38,7 @@ export const Active: Story = {
     task: {
       id: "1", todoListId: "TodoListId1", title: "Task title", description: '',
       status: TaskStatuses.New, priority: TaskPriorities.Low,
-      startDate: '', deadline: '', addedDate: '', order: 0,
+      startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
     },
   }
 };
@@ -48,7 +48,17 @@ export const Completed: Story = {
     task: {
       id: "1", todoListId: "TodoListId1", title: "Task title", description: '',
       status: TaskStatuses.Completed, priority: TaskPriorities.Low,
-      startDate: '', deadline: '', addedDate: '', order: 0,
+      startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
+    },
+  }
+};
+
+export const Disabled: Story = {
+  args: {
+    task: {
+      id: "1", todoListId: "TodoListId1", title: "Task title", description: '',
+      status: TaskStatuses.Completed, priority: TaskPriorities.Low,
+      startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'loading',
     },
   }
 };

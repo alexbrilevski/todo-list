@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, type FC } from 'react';
-import { TaskStatuses, type TaskStatus, type TaskType } from '../models/task';
+import { TaskStatuses, type TaskStatus, type DomainTask } from '../models/task';
 import type { TodoListDomainType, TodoListFilterValues } from '../models/todo';
 import AddItemForm from './UI/AddItemForm/AddItemForm';
 import Task from './Task/Task';
@@ -11,7 +11,7 @@ import { fetchTasks } from '../store/tasksReducer';
 
 type ToDoListProps = {
   todo: TodoListDomainType,
-  tasks: Array<TaskType>,
+  tasks: Array<DomainTask>,
   changeTodoListTitle: (id: string, title: string) => void
   removeTodoList: (id: string) => void,
   addTask: (id: string, title: string) => void,

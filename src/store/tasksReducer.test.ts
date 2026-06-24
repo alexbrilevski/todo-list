@@ -4,10 +4,12 @@ import {
   removeTaskAC,
   setTasksAC,
   tasksReducer,
-  type TasksStateType
+  type TasksStateType,
+  changeTaskEntityStatusAC
 } from './tasksReducer';
 import type { TodoListDomainType, TodoListType } from '../models/todo';
 import { addTodoListAC, removeTodoListAC, setTodoListsAC, todoListsReducer } from './todoListsReducer';
+import type { RequestStatus } from '../models/app';
 import { TaskPriorities, TaskStatuses, type TaskType } from '../models/task';
 import { v1 } from 'uuid';
 
@@ -21,34 +23,34 @@ beforeEach(() => {
       {
         id: '1', title: 'HTML & CSS', todoListId: todoListId1, description: '',
         status: TaskStatuses.Completed, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
       {
         id: '2', title: 'JS', todoListId: todoListId1, description: '',
         status: TaskStatuses.Completed, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
       {
         id: '3', title: 'React', todoListId: todoListId1, description: '',
         status: TaskStatuses.New, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
     ],
     [todoListId2]: [
       {
         id: '1', title: 'Bread', todoListId: todoListId2, description: '',
         status: TaskStatuses.New, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
       {
         id: '2', title: 'Milk', todoListId: todoListId2, description: '',
         status: TaskStatuses.Completed, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
       {
         id: '3', title: 'Tea', todoListId: todoListId2, description: '',
         status: TaskStatuses.New, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
     ],
   };
@@ -116,29 +118,29 @@ test('Task is correctly removed from specified Todo list', () => {
       {
         id: '1', title: 'HTML & CSS', todoListId: todoListId1, description: '',
         status: TaskStatuses.Completed, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
       {
         id: '2', title: 'JS', todoListId: todoListId1, description: '',
         status: TaskStatuses.Completed, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
       {
         id: '3', title: 'React', todoListId: todoListId1, description: '',
         status: TaskStatuses.New, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
     ],
     [todoListId2]: [
       {
         id: '1', title: 'Bread', todoListId: todoListId2, description: '',
         status: TaskStatuses.New, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
       {
         id: '3', title: 'Tea', todoListId: todoListId2, description: '',
         status: TaskStatuses.New, priority: TaskPriorities.Low,
-        startDate: '', deadline: '', addedDate: '', order: 0,
+        startDate: '', deadline: '', addedDate: '', order: 0, entityStatus: 'idle',
       },
     ],
   });
@@ -213,4 +215,16 @@ test('Tasks for specific todo list are set to app state correctly', () => {
 
   expect(endState[todoListId1].length).toBe(3);
   expect(endState[todoListId2].length).toBe(0);
+});
+
+test('Task entity status changes correctly', () => {
+  const todoId = 'todoListId2';
+  const taskId = '2';
+  const newStatus: RequestStatus = 'loading';
+  const action = changeTaskEntityStatusAC(todoId, taskId, newStatus);
+
+  const endState = tasksReducer(startState, action);
+
+  expect(endState[todoListId1][1].entityStatus).toBe('idle');
+  expect(endState[todoId][1].entityStatus).toBe(newStatus);
 });

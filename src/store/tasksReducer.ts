@@ -1,5 +1,6 @@
 import type { Dispatch } from 'redux';
 import {
+  type DomainTask,
   type TaskType
 } from '../models/task';
 import {
@@ -11,16 +12,18 @@ import {
 import { todoListsApi, type UpdateTaskRequestData } from '../api/todoListsApi';
 import type { RootState } from './store';
 import { setAppErrorAC, setAppStatusAC } from './appReducer';
+import type { RequestStatus } from '../models/app';
 
 const TASK_ACTION_TYPES = {
   SET_TAKS: 'task/SET_TASKS',
   ADD: 'task/ADD',
   UPDATE: 'task/UPDATE',
   REMOVE: 'task/REMOVE',
+  CHANGE_ENTITY_STATUS: 'task/CHANGE_ENTITY_STATUS',
 } as const;
 
 export type TasksStateType = {
-  [key: string]: Array<TaskType>,
+  [key: string]: Array<DomainTask>,
 };
 
 type UpdateTaskModel = Partial<UpdateTaskRequestData>;
@@ -35,6 +38,7 @@ export type TaskActions =
   AddTaskAction |
   UpdateTaskAction |
   RemovedTaskAction |
+  ReturnType<typeof changeTaskEntityStatusAC> |
   SetTodoListsAction |
   AddTodoListAction |
   RemovedTodoListAction;
@@ -45,14 +49,15 @@ export const tasksReducer = (state: TasksStateType = initState, action: TaskActi
   switch (action.type) {
     case TASK_ACTION_TYPES.SET_TAKS: {
       const updatedState = { ...state };
-      updatedState[action.todoListId] = action.tasks;
+      updatedState[action.todoListId] =
+        action.tasks.map(task => ({ ...task, entityStatus: 'idle' }));
       return updatedState;
     }
     case TASK_ACTION_TYPES.ADD:
       return {
         ...state,
         [action.newTask.todoListId]: [
-          action.newTask,
+          { ...action.newTask, entityStatus: 'idle' },
           ...state[action.newTask.todoListId],
         ],
       };
@@ -68,6 +73,14 @@ export const tasksReducer = (state: TasksStateType = initState, action: TaskActi
         ...state,
         [action.todoId]: state[action.todoId].filter(task => task.id !== action.taskId),
       };
+    case TASK_ACTION_TYPES.CHANGE_ENTITY_STATUS: {
+      return {
+        ...state,
+        [action.todoId]: state[action.todoId].map(task =>
+          task.id === action.id ? { ...task, entityStatus: action.status } : task
+        ),
+      };
+    }
     case TODOLIST_ACTION_TYPES.SET_TODOS: {
       const updatedState = { ...state };
       action.todos.forEach(todo => updatedState[todo.id] = []);
@@ -98,6 +111,10 @@ export const updateTaskAC = (todoId: string, taskId: string, taskModel: UpdateTa
 
 export const removeTaskAC = (todoId: string, taskId: string) => {
   return { type: TASK_ACTION_TYPES.REMOVE, todoId, taskId };
+};
+
+export const changeTaskEntityStatusAC = (todoId: string, id: string, status: RequestStatus) => {
+  return { type: TASK_ACTION_TYPES.CHANGE_ENTITY_STATUS, todoId, id, status };
 };
 
 export const fetchTasks = (todoListId: string) => {
@@ -157,6 +174,7 @@ export const updateTaskTC = (todoListId: string, taskId: string, taskModel: Upda
 export const deleteTaskTC = (todoId: string, taskId: string) => {
   return (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'));
+    dispatch(changeTaskEntityStatusAC(todoId, taskId, 'loading'));
     todoListsApi.deleteTask(todoId, taskId).then(response => {
       if (response.data.resultCode === 0) {
         dispatch(removeTaskAC(todoId, taskId));

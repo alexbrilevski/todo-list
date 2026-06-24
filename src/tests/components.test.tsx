@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import AddItemForm from "../components/UI/AddItemForm/AddItemForm";
 import EditableSpan from "../components/UI/EditableSpan/EditableSpan";
 import Task from "../components/Task/Task";
-import { TaskPriorities, TaskStatuses, type TaskType } from "../models/task";
+import { TaskPriorities, TaskStatuses, type DomainTask } from "../models/task";
 
 describe('AddItemForm component', () => {
   it("Matches the snapshot", () => {
@@ -26,14 +26,13 @@ describe('EditableSpan component', () => {
 
 describe('Task component', () => {
   it("Completed state matches the snapshot", () => {
-    const mockTask: TaskType = {
+    const mockTask: DomainTask = {
       id: "t1", title: "Title", todoListId: "td1", description: "",
       status: TaskStatuses.Completed, priority: TaskPriorities.Low,
-      startDate: "", deadline: "", addedDate: "", order: 0,
+      startDate: "", deadline: "", addedDate: "", order: 0, entityStatus: "idle",
     };
     const { asFragment } = render(
       <Task
-        todoId="todoId1"
         task={mockTask}
         changeTaskTitle={() => { }}
         changeTaskStatus={() => { }}
@@ -45,14 +44,13 @@ describe('Task component', () => {
   });
 
   it("Active state matches the snapshot", () => {
-    const mockTask: TaskType = {
+    const mockTask: DomainTask = {
       id: "t1", title: "Title", todoListId: "td1", description: "",
       status: TaskStatuses.New, priority: TaskPriorities.Low,
-      startDate: "", deadline: "", addedDate: "", order: 0,
+      startDate: "", deadline: "", addedDate: "", order: 0, entityStatus: "idle",
     };
     const { asFragment } = render(
       <Task
-        todoId="todoId1"
         task={mockTask}
         changeTaskTitle={() => { }}
         changeTaskStatus={() => { }}

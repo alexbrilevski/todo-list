@@ -39,29 +39,29 @@ const mockPreloadedState: RootState = {
       {
         id: v1(), title: "HTML&CSS", todoListId: "todolistId1", description: "",
         status: TaskStatuses.Completed, priority: TaskPriorities.Low,
-        startDate: "", deadline: "", addedDate: "", order: 0,
+        startDate: "", deadline: "", addedDate: "", order: 0, entityStatus: "idle",
       },
       {
         id: v1(), title: "JS", todoListId: "todolistId1", description: "",
         status: TaskStatuses.New, priority: TaskPriorities.Low,
-        startDate: "", deadline: "", addedDate: "", order: 0,
+        startDate: "", deadline: "", addedDate: "", order: 0, entityStatus: "idle",
       },
     ],
     "todolistId2": [
       {
         id: v1(), title: "Bread", todoListId: "todolistId2", description: "",
         status: TaskStatuses.Completed, priority: TaskPriorities.Low,
-        startDate: "", deadline: "", addedDate: "", order: 0,
+        startDate: "", deadline: "", addedDate: "", order: 0, entityStatus: "idle",
       },
       {
         id: v1(), title: "Milk", todoListId: "todolistId2", description: "",
         status: TaskStatuses.Completed, priority: TaskPriorities.Low,
-        startDate: "", deadline: "", addedDate: "", order: 0,
+        startDate: "", deadline: "", addedDate: "", order: 0, entityStatus: "idle",
       },
       {
         id: v1(), title: "Bread", todoListId: "todolistId2", description: "",
         status: TaskStatuses.New, priority: TaskPriorities.Low,
-        startDate: "", deadline: "", addedDate: "", order: 0,
+        startDate: "", deadline: "", addedDate: "", order: 0, entityStatus: "idle",
       },
     ],
   },

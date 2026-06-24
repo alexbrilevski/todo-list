@@ -1,11 +1,11 @@
 import { memo, useCallback, type FC, type ChangeEvent } from 'react';
-import { TaskStatuses, type TaskStatus, type TaskType } from '../../models/task';
+import { TaskStatuses, type TaskStatus, type DomainTask } from '../../models/task';
 import EditableSpan from '../UI/EditableSpan/EditableSpan';
 import { Checkbox, IconButton } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 
 type TaskProps = {
-  task: TaskType,
+  task: DomainTask,
   changeTaskTitle: (todoId: string, id: string, title: string) => void,
   changeTaskStatus: (todoId: string, id: string, status: TaskStatus) => void,
   removeTask: (todoId: string, id: string) => void,
@@ -17,7 +17,7 @@ const Task: FC<TaskProps> = memo(({
   changeTaskStatus,
   removeTask,
 }) => {
-  const { id, todoListId, title, status } = task;
+  const { id, todoListId, title, status, entityStatus } = task;
 
   const onChangeTaskTitle = useCallback((title: string) => {
     changeTaskTitle(todoListId, id, title);
@@ -34,9 +34,17 @@ const Task: FC<TaskProps> = memo(({
         color="primary"
         checked={status === TaskStatuses.Completed}
         onChange={onChangeTaskStatus}
+        disabled={entityStatus === 'loading'}
       />
-      <EditableSpan text={title} onChangeText={onChangeTaskTitle} />
-      <IconButton onClick={() => removeTask(todoListId, id)}>
+      <EditableSpan
+        text={title}
+        onChangeText={onChangeTaskTitle}
+        disabled={entityStatus === 'loading'}
+      />
+      <IconButton
+        onClick={() => removeTask(todoListId, id)}
+        disabled={entityStatus === 'loading'}
+      >
         <Delete />
       </IconButton>
     </div>

@@ -1,3 +1,5 @@
+import type { RequestStatus } from "./app";
+
 export const TaskStatuses = {
   New: 0,
   InProgress: 1,
@@ -28,4 +30,8 @@ export type TaskType = {
   startDate: string,
   deadline: string,
   order: number,
+};
+
+export type DomainTask = TaskType & {
+  entityStatus: RequestStatus,
 };
