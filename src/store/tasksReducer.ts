@@ -11,8 +11,9 @@ import {
 } from './todoListsReducer';
 import { todoListsApi, type UpdateTaskRequestData } from '../api/todoListsApi';
 import type { RootState } from './store';
-import { setAppErrorAC, setAppStatusAC } from './appReducer';
+import { setAppStatusAC } from './appReducer';
 import type { RequestStatus } from '../models/app';
+import { handleRequestError, handleResponseError } from '../utils/errorUtils';
 
 const TASK_ACTION_TYPES = {
   SET_TAKS: 'task/SET_TASKS',
@@ -126,8 +127,7 @@ export const fetchTasks = (todoListId: string) => {
         dispatch(setAppStatusAC('succeeded'));
       })
       .catch(error => {
-        dispatch(setAppErrorAC(error.message));
-        dispatch(setAppStatusAC('failed'));
+        handleRequestError(error, dispatch);
       });;
   };
 };
@@ -141,17 +141,11 @@ export const addTaskTC = (todoListId: string, title: string) => {
           dispatch(addTaskAC(response.data.data.item));
           dispatch(setAppStatusAC('succeeded'));
         } else {
-          if (response.data.messages.length) {
-            dispatch(setAppErrorAC(response.data.messages[0]));
-          } else {
-            dispatch(setAppErrorAC('An unknown error occurred'));
-          }
-          dispatch(setAppStatusAC('failed'));
+          handleResponseError(response.data, dispatch);
         }
       })
       .catch(error => {
-        dispatch(setAppErrorAC(error.message));
-        dispatch(setAppStatusAC('failed'));
+        handleRequestError(error, dispatch);
       });
   };
 };
@@ -170,17 +164,11 @@ export const updateTaskTC = (todoListId: string, taskId: string, taskModel: Upda
             dispatch(updateTaskAC(todoListId, taskId, taskModel));
             dispatch(setAppStatusAC('succeeded'));
           } else {
-            if (response.data.messages.length) {
-              dispatch(setAppErrorAC(response.data.messages[0]));
-            } else {
-              dispatch(setAppErrorAC('An unknown error occurred'));
-            }
-            dispatch(setAppStatusAC('failed'));
+            handleResponseError(response.data, dispatch);
           }
         })
         .catch(error => {
-          dispatch(setAppErrorAC(error.message));
-          dispatch(setAppStatusAC('failed'));
+          handleRequestError(error, dispatch);
         });;
     }
   };
@@ -196,17 +184,11 @@ export const deleteTaskTC = (todoId: string, taskId: string) => {
           dispatch(removeTaskAC(todoId, taskId));
           dispatch(setAppStatusAC('succeeded'));
         } else {
-          if (response.data.messages.length) {
-            dispatch(setAppErrorAC(response.data.messages[0]));
-          } else {
-            dispatch(setAppErrorAC('An unknown error occurred'));
-          }
-          dispatch(setAppStatusAC('failed'));
+          handleResponseError(response.data, dispatch);
         }
       })
       .catch(error => {
-        dispatch(setAppErrorAC(error.message));
-        dispatch(setAppStatusAC('failed'));
+        handleRequestError(error, dispatch);
       });;
   };
 };

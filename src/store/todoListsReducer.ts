@@ -1,8 +1,9 @@
 import type { Dispatch } from 'redux';
 import type { TodoListFilterValues, TodoListDomainType, TodoListType } from '../models/todo';
 import { todoListsApi } from '../api/todoListsApi';
-import { setAppErrorAC, setAppStatusAC } from './appReducer';
+import { setAppStatusAC } from './appReducer';
 import type { RequestStatus } from '../models/app';
+import { handleRequestError, handleResponseError } from '../utils/errorUtils';
 
 export const TODOLIST_ACTION_TYPES = {
   SET_TODOS: 'todoList/SET_TODOS',
@@ -89,8 +90,7 @@ export const fetchTodoLists = () => {
         dispatch(setAppStatusAC('succeeded'));
       })
       .catch(error => {
-        dispatch(setAppErrorAC(error.message));
-        dispatch(setAppStatusAC('failed'));
+        handleRequestError(error, dispatch);
       });;
   };
 };
@@ -104,17 +104,11 @@ export const addTodoListTC = (title: string) => {
           dispatch(addTodoListAC(response.data.data.item));
           dispatch(setAppStatusAC('succeeded'));
         } else {
-          if (response.data.messages.length) {
-            dispatch(setAppErrorAC(response.data.messages[0]));
-          } else {
-            dispatch(setAppErrorAC('An unknown error occurred'));
-          }
-          dispatch(setAppStatusAC('failed'));
+          handleResponseError(response.data, dispatch);
         }
       })
       .catch(error => {
-        dispatch(setAppErrorAC(error.message));
-        dispatch(setAppStatusAC('failed'));
+        handleRequestError(error, dispatch);
       });
   };
 };
@@ -128,17 +122,11 @@ export const changeTodoListTitleTC = (id: string, title: string) => {
           dispatch(changeTodoListTitleAC(id, title));
           dispatch(setAppStatusAC('succeeded'));
         } else {
-          if (response.data.messages.length) {
-            dispatch(setAppErrorAC(response.data.messages[0]));
-          } else {
-            dispatch(setAppErrorAC('An unknown error occurred'));
-          }
-          dispatch(setAppStatusAC('failed'));
+          handleResponseError(response.data, dispatch);
         }
       })
       .catch(error => {
-        dispatch(setAppErrorAC(error.message));
-        dispatch(setAppStatusAC('failed'));
+        handleRequestError(error, dispatch);
       });;
   };
 };
@@ -153,17 +141,11 @@ export const removeTodoListTC = (id: string) => {
           dispatch(removeTodoListAC(id));
           dispatch(setAppStatusAC('succeeded'));
         } else {
-          if (response.data.messages.length) {
-            dispatch(setAppErrorAC(response.data.messages[0]));
-          } else {
-            dispatch(setAppErrorAC('An unknown error occurred'));
-          }
-          dispatch(setAppStatusAC('failed'));
+          handleResponseError(response.data, dispatch);
         }
       })
       .catch(error => {
-        dispatch(setAppErrorAC(error.message));
-        dispatch(setAppStatusAC('failed'));
+        handleRequestError(error, dispatch);
       });;
   };
 };

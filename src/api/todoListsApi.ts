@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { TodoListType } from '../models/todo';
 import type { TaskType, TaskPriority, TaskStatus } from '../models/task';
 
-type ResponseData<D = {}> = {
+export type ResponseData<D = {}> = {
   data: D,
   resultCode: number,
   messages: Array<string>,
