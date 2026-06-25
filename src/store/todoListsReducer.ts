@@ -83,48 +83,63 @@ export const changeTodoListEntityStatusAC = (id: string, status: RequestStatus) 
 export const fetchTodoLists = () => {
   return (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'));
-    todoListsApi.getTodolists().then(response => {
-      dispatch(setTodoListsAC(response.data));
-      dispatch(setAppStatusAC('succeeded'));
-    });
+    todoListsApi.getTodolists()
+      .then(response => {
+        dispatch(setTodoListsAC(response.data));
+        dispatch(setAppStatusAC('succeeded'));
+      })
+      .catch(error => {
+        dispatch(setAppErrorAC(error.message));
+        dispatch(setAppStatusAC('failed'));
+      });;
   };
 };
 
 export const addTodoListTC = (title: string) => {
   return (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'));
-    todoListsApi.createTodolist(title).then(response => {
-      if (response.data.resultCode === 0) {
-        dispatch(addTodoListAC(response.data.data.item));
-        dispatch(setAppStatusAC('succeeded'));
-      } else {
-        if (response.data.messages.length) {
-          dispatch(setAppErrorAC(response.data.messages[0]));
+    todoListsApi.createTodolist(title)
+      .then(response => {
+        if (response.data.resultCode === 0) {
+          dispatch(addTodoListAC(response.data.data.item));
+          dispatch(setAppStatusAC('succeeded'));
         } else {
-          dispatch(setAppErrorAC('An unknown error occurred'));
+          if (response.data.messages.length) {
+            dispatch(setAppErrorAC(response.data.messages[0]));
+          } else {
+            dispatch(setAppErrorAC('An unknown error occurred'));
+          }
+          dispatch(setAppStatusAC('failed'));
         }
+      })
+      .catch(error => {
+        dispatch(setAppErrorAC(error.message));
         dispatch(setAppStatusAC('failed'));
-      }
-    });
+      });
   };
 };
 
 export const changeTodoListTitleTC = (id: string, title: string) => {
   return (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'));
-    todoListsApi.updateTodolistTitle(id, title).then(response => {
-      if (response.data.resultCode === 0) {
-        dispatch(changeTodoListTitleAC(id, title));
-        dispatch(setAppStatusAC('succeeded'));
-      } else {
-        if (response.data.messages.length) {
-          dispatch(setAppErrorAC(response.data.messages[0]));
+    todoListsApi.updateTodolistTitle(id, title)
+      .then(response => {
+        if (response.data.resultCode === 0) {
+          dispatch(changeTodoListTitleAC(id, title));
+          dispatch(setAppStatusAC('succeeded'));
         } else {
-          dispatch(setAppErrorAC('An unknown error occurred'));
+          if (response.data.messages.length) {
+            dispatch(setAppErrorAC(response.data.messages[0]));
+          } else {
+            dispatch(setAppErrorAC('An unknown error occurred'));
+          }
+          dispatch(setAppStatusAC('failed'));
         }
+      })
+      .catch(error => {
+        dispatch(setAppErrorAC(error.message));
         dispatch(setAppStatusAC('failed'));
-      }
-    });
+      });;
   };
 };
 
@@ -132,18 +147,23 @@ export const removeTodoListTC = (id: string) => {
   return (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'));
     dispatch(changeTodoListEntityStatusAC(id, 'loading'));
-    todoListsApi.deleteTodolist(id).then(response => {
-      if (response.data.resultCode === 0) {
-        dispatch(removeTodoListAC(id));
-        dispatch(setAppStatusAC('succeeded'));
-      } else {
-        if (response.data.messages.length) {
-          dispatch(setAppErrorAC(response.data.messages[0]));
+    todoListsApi.deleteTodolist(id)
+      .then(response => {
+        if (response.data.resultCode === 0) {
+          dispatch(removeTodoListAC(id));
+          dispatch(setAppStatusAC('succeeded'));
         } else {
-          dispatch(setAppErrorAC('An unknown error occurred'));
+          if (response.data.messages.length) {
+            dispatch(setAppErrorAC(response.data.messages[0]));
+          } else {
+            dispatch(setAppErrorAC('An unknown error occurred'));
+          }
+          dispatch(setAppStatusAC('failed'));
         }
+      })
+      .catch(error => {
+        dispatch(setAppErrorAC(error.message));
         dispatch(setAppStatusAC('failed'));
-      }
-    });
+      });;
   };
 };

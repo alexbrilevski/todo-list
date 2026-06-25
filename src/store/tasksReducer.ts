@@ -120,29 +120,39 @@ export const changeTaskEntityStatusAC = (todoId: string, id: string, status: Req
 export const fetchTasks = (todoListId: string) => {
   return (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'));
-    todoListsApi.getTasks(todoListId).then(response => {
-      dispatch(setTasksAC(todoListId, response.data.items));
-      dispatch(setAppStatusAC('succeeded'));
-    });
+    todoListsApi.getTasks(todoListId)
+      .then(response => {
+        dispatch(setTasksAC(todoListId, response.data.items));
+        dispatch(setAppStatusAC('succeeded'));
+      })
+      .catch(error => {
+        dispatch(setAppErrorAC(error.message));
+        dispatch(setAppStatusAC('failed'));
+      });;
   };
 };
 
 export const addTaskTC = (todoListId: string, title: string) => {
   return (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'));
-    todoListsApi.createTask(todoListId, title).then(response => {
-      if (response.data.resultCode === 0) {
-        dispatch(addTaskAC(response.data.data.item));
-        dispatch(setAppStatusAC('succeeded'));
-      } else {
-        if (response.data.messages.length) {
-          dispatch(setAppErrorAC(response.data.messages[0]));
+    todoListsApi.createTask(todoListId, title)
+      .then(response => {
+        if (response.data.resultCode === 0) {
+          dispatch(addTaskAC(response.data.data.item));
+          dispatch(setAppStatusAC('succeeded'));
         } else {
-          dispatch(setAppErrorAC('An unknown error occurred'));
+          if (response.data.messages.length) {
+            dispatch(setAppErrorAC(response.data.messages[0]));
+          } else {
+            dispatch(setAppErrorAC('An unknown error occurred'));
+          }
+          dispatch(setAppStatusAC('failed'));
         }
+      })
+      .catch(error => {
+        dispatch(setAppErrorAC(error.message));
         dispatch(setAppStatusAC('failed'));
-      }
-    });
+      });
   };
 };
 
@@ -154,9 +164,36 @@ export const updateTaskTC = (todoListId: string, taskId: string, taskModel: Upda
       const updateRequestTaskModel = { ...taskToUpdate, ...taskModel };
 
       dispatch(setAppStatusAC('loading'));
-      todoListsApi.updateTask(todoListId, taskId, updateRequestTaskModel).then(response => {
+      todoListsApi.updateTask(todoListId, taskId, updateRequestTaskModel)
+        .then(response => {
+          if (response.data.resultCode === 0) {
+            dispatch(updateTaskAC(todoListId, taskId, taskModel));
+            dispatch(setAppStatusAC('succeeded'));
+          } else {
+            if (response.data.messages.length) {
+              dispatch(setAppErrorAC(response.data.messages[0]));
+            } else {
+              dispatch(setAppErrorAC('An unknown error occurred'));
+            }
+            dispatch(setAppStatusAC('failed'));
+          }
+        })
+        .catch(error => {
+          dispatch(setAppErrorAC(error.message));
+          dispatch(setAppStatusAC('failed'));
+        });;
+    }
+  };
+};
+
+export const deleteTaskTC = (todoId: string, taskId: string) => {
+  return (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'));
+    dispatch(changeTaskEntityStatusAC(todoId, taskId, 'loading'));
+    todoListsApi.deleteTask(todoId, taskId)
+      .then(response => {
         if (response.data.resultCode === 0) {
-          dispatch(updateTaskAC(todoListId, taskId, taskModel));
+          dispatch(removeTaskAC(todoId, taskId));
           dispatch(setAppStatusAC('succeeded'));
         } else {
           if (response.data.messages.length) {
@@ -166,27 +203,10 @@ export const updateTaskTC = (todoListId: string, taskId: string, taskModel: Upda
           }
           dispatch(setAppStatusAC('failed'));
         }
-      });
-    }
-  };
-};
-
-export const deleteTaskTC = (todoId: string, taskId: string) => {
-  return (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC('loading'));
-    dispatch(changeTaskEntityStatusAC(todoId, taskId, 'loading'));
-    todoListsApi.deleteTask(todoId, taskId).then(response => {
-      if (response.data.resultCode === 0) {
-        dispatch(removeTaskAC(todoId, taskId));
-        dispatch(setAppStatusAC('succeeded'));
-      } else {
-        if (response.data.messages.length) {
-          dispatch(setAppErrorAC(response.data.messages[0]));
-        } else {
-          dispatch(setAppErrorAC('An unknown error occurred'));
-        }
+      })
+      .catch(error => {
+        dispatch(setAppErrorAC(error.message));
         dispatch(setAppStatusAC('failed'));
-      }
-    });
+      });;
   };
 };
