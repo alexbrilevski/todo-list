@@ -1,9 +1,9 @@
-import type { Dispatch } from 'redux';
 import type { TodoListFilterValues, TodoListDomainType, TodoListType } from '../models/todo';
 import { todoListsApi } from '../api/todoListsApi';
 import { setAppStatusAC } from './appReducer';
 import type { RequestStatus } from '../models/app';
 import { handleRequestError, handleResponseError } from '../utils/errorUtils';
+import type { AppThunk } from './store';
 
 export const TODOLIST_ACTION_TYPES = {
   SET_TODOS: 'todoList/SET_TODOS',
@@ -81,8 +81,8 @@ export const changeTodoListEntityStatusAC = (id: string, status: RequestStatus) 
   return { type: TODOLIST_ACTION_TYPES.CHANGE_ENTITY_STATUS, id, status };
 };
 
-export const fetchTodoLists = () => {
-  return (dispatch: Dispatch) => {
+export const fetchTodoLists = (): AppThunk => {
+  return (dispatch) => {
     dispatch(setAppStatusAC('loading'));
     todoListsApi.getTodolists()
       .then(response => {
@@ -95,8 +95,8 @@ export const fetchTodoLists = () => {
   };
 };
 
-export const addTodoListTC = (title: string) => {
-  return (dispatch: Dispatch) => {
+export const addTodoListTC = (title: string): AppThunk => {
+  return (dispatch) => {
     dispatch(setAppStatusAC('loading'));
     todoListsApi.createTodolist(title)
       .then(response => {
@@ -113,8 +113,8 @@ export const addTodoListTC = (title: string) => {
   };
 };
 
-export const changeTodoListTitleTC = (id: string, title: string) => {
-  return (dispatch: Dispatch) => {
+export const changeTodoListTitleTC = (id: string, title: string): AppThunk => {
+  return (dispatch) => {
     dispatch(setAppStatusAC('loading'));
     todoListsApi.updateTodolistTitle(id, title)
       .then(response => {
@@ -131,8 +131,8 @@ export const changeTodoListTitleTC = (id: string, title: string) => {
   };
 };
 
-export const removeTodoListTC = (id: string) => {
-  return (dispatch: Dispatch) => {
+export const removeTodoListTC = (id: string): AppThunk => {
+  return (dispatch) => {
     dispatch(setAppStatusAC('loading'));
     dispatch(changeTodoListEntityStatusAC(id, 'loading'));
     todoListsApi.deleteTodolist(id)
