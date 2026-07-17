@@ -15,7 +15,7 @@ export type AppActions =
   ReturnType<typeof setAppErrorAC>;
 
 const initState = {
-  status: 'loading' as RequestStatus,
+  status: 'idle' as RequestStatus,
   error: null,
 };
 
