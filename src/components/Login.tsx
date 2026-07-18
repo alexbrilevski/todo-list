@@ -1,3 +1,4 @@
+import { Navigate } from "react-router-dom";
 import {
   Button,
   Checkbox,
@@ -9,6 +10,8 @@ import {
   TextField
 } from "@mui/material";
 import { useFormik } from "formik";
+import { useAppSelector, useAppDispatch } from "../store/store";
+import { loginTC } from "../store/authReducer";
 
 type FormikErrorType = {
   email?: string
@@ -17,6 +20,9 @@ type FormikErrorType = {
 };
 
 const Login = () => {
+  const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
+  const dispatch = useAppDispatch();
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -38,10 +44,14 @@ const Login = () => {
       return errors;
     },
     onSubmit: (values) => {
-      console.log(values);
+      dispatch(loginTC(values));
       formik.resetForm();
     },
   });
+
+  if (isLoggedIn) {
+    return <Navigate to="/"/>
+  }
 
   return (
     <Grid container style={{ justifyContent: "center" }}>

@@ -24,6 +24,13 @@ export type UpdateTaskRequestData = {
   deadline: string,
 };
 
+export type LoginParams = {
+  email: string,
+  password: string,
+  rememberMe?: boolean,
+  captcha?: string,
+};
+
 const requestSettings = {
   withCredentials: true,
   headers: {
@@ -75,4 +82,19 @@ export const todoListsApi = {
     return baseInstance
       .put<ResponseData<{ item: TaskType }>>(`todo-lists/${todoListId}/tasks/${taskId}`, taskModel);
   },
+};
+
+export const authAPI = {
+  me() {
+    return baseInstance
+      .get<ResponseData<{id: number, email: string, login: string}>>('auth/me');
+  },
+  login(payload: LoginParams) {
+    return baseInstance
+      .post<ResponseData<{userId?: number}>>('auth/login', payload);
+  },
+  logout() {
+    return baseInstance
+      .delete<ResponseData>('auth/login');
+  }
 };

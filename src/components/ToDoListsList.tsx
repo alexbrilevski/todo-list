@@ -1,19 +1,20 @@
 import { useCallback, useEffect, type FC } from "react";
+import { Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import type { TodoListDomainType, TodoListFilterValues } from "../models/todo";
-import { 
-  addTaskTC, 
-  deleteTaskTC, 
-  updateTaskTC, 
-  type TasksStateType 
+import {
+  addTaskTC,
+  deleteTaskTC,
+  updateTaskTC,
+  type TasksStateType
 } from "../store/tasksReducer";
 import type { TaskStatus } from "../models/task";
-import { 
-  addTodoListTC, 
-  changeTodoListFilterAC, 
-  changeTodoListTitleTC, 
-  fetchTodoLists, 
-  removeTodoListTC 
+import {
+  addTodoListTC,
+  changeTodoListFilterAC,
+  changeTodoListTitleTC,
+  fetchTodoLists,
+  removeTodoListTC
 } from "../store/todoListsReducer";
 import { Grid, Paper } from "@mui/material";
 import ToDoList from "./ToDoList";
@@ -24,15 +25,16 @@ type ToDoListsListProps = {
 };
 
 const ToDoListsList: FC<ToDoListsListProps> = ({ isDemo = false }) => {
+  const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
   const todos = useAppSelector<Array<TodoListDomainType>>(state => state.todos);
   const tasks = useAppSelector<TasksStateType>(state => state.tasks);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (isDemo) return;
+    if (isDemo || !isLoggedIn) return;
 
     dispatch(fetchTodoLists());
-  }, []);
+  }, [isDemo, isLoggedIn]);
 
   const addTodoList = useCallback((title: string) => {
     dispatch(addTodoListTC(title));
@@ -65,6 +67,10 @@ const ToDoListsList: FC<ToDoListsListProps> = ({ isDemo = false }) => {
   const removeTask = useCallback((todoId: string, taskId: string) => {
     dispatch(deleteTaskTC(todoId, taskId));
   }, []);
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <>

@@ -13,8 +13,12 @@ import App from "./App";
 
 const mockPreloadedState: RootState = {
   app: {
+    isInitialized: false,
     status: "idle",
     error: null,
+  },
+  auth: {
+    isLoggedIn: false,
   },
   todos: [
     {
