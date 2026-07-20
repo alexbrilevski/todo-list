@@ -1,105 +1,48 @@
-import { useCallback, useEffect, type FC } from 'react';
+import { useEffect, type FC } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import ErrorSnackbar from './components/UI/ErrorSnackbar/ErrorSnackbar';
 import AppHeader from './components/AppHeader';
-import AddItemForm from './components/UI/AddItemForm/AddItemForm';
-import ToDoList from './components/ToDoList';
-import { Container, Grid, Paper } from '@mui/material';
-import {
-  addTodoListTC,
-  changeTodoListFilterAC,
-  changeTodoListTitleTC,
-  fetchTodoLists,
-  removeTodoListTC,
-} from './store/todoListsReducer';
-import {
-  addTaskTC,
-  updateTaskTC,
-  deleteTaskTC,
-  type TasksStateType,
-} from './store/tasksReducer';
+import { CircularProgress, Container } from '@mui/material';
+import ToDoListsList from './components/ToDoListsList';
+import Login from './components/Login';
 import { useAppDispatch, useAppSelector } from './store/store';
-import type { TodoListFilterValues, TodoListDomainType } from './models/todo';
-import type { TaskStatus } from './models/task';
+import { initializeAppTC } from './store/appReducer';
 
 type AppProps = {
   isDemo?: boolean,
 };
 
 const App: FC<AppProps> = ({ isDemo = false }) => {
-  const todos = useAppSelector<Array<TodoListDomainType>>(state => state.todos);
-  const tasks = useAppSelector<TasksStateType>(state => state.tasks);
+  const isInitialized = useAppSelector<boolean>(state => state.app.isInitialized);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (isDemo) return;
-
-    dispatch(fetchTodoLists());
+    dispatch(initializeAppTC());
   }, []);
 
-  const addTodoList = useCallback((title: string) => {
-    dispatch(addTodoListTC(title));
-  }, []);
-
-  const changeTodoListTitle = useCallback((id: string, title: string) => {
-    dispatch(changeTodoListTitleTC(id, title));
-  }, []);
-
-  const changeTodoListFilter = useCallback((id: string, filter: TodoListFilterValues) => {
-    dispatch(changeTodoListFilterAC(id, filter));
-  }, []);
-
-  const removeTodoList = useCallback((id: string) => {
-    dispatch(removeTodoListTC(id));
-  }, []);
-
-  const addTask = useCallback((todoId: string, title: string) => {
-    dispatch(addTaskTC(todoId, title));
-  }, []);
-
-  const changeTaskTitle = useCallback((todoId: string, taskId: string, title: string) => {
-    dispatch(updateTaskTC(todoId, taskId, { title }));
-  }, []);
-
-  const changeTaskStatus = useCallback((todoId: string, taskId: string, status: TaskStatus) => {
-    dispatch(updateTaskTC(todoId, taskId, { status }));
-  }, []);
-
-  const removeTask = useCallback((todoId: string, taskId: string) => {
-    dispatch(deleteTaskTC(todoId, taskId));
-  }, []);
+  if (!isInitialized) {
+    return (
+      <div style={{ position: "fixed", top: "30%", width: "100%", textAlign: "center" }}>
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
-    <div className="App">
-      <ErrorSnackbar/>
-      <AppHeader />
-      <Container fixed>
-        <Grid container style={{ padding: "20px" }}>
-          <AddItemForm addItem={addTodoList} />
-        </Grid>
-        <Grid container spacing={3} style={{ padding: "20px" }}>
-          {todos.map(todo => {
-            return (
-              <Grid key={todo.id}>
-                <Paper style={{ padding: "10px" }}>
-                  <ToDoList
-                    todo={todo}
-                    tasks={tasks[todo.id]}
-                    changeTodoListTitle={changeTodoListTitle}
-                    removeTodoList={removeTodoList}
-                    addTask={addTask}
-                    changeTaskTitle={changeTaskTitle}
-                    changeTaskStatus={changeTaskStatus}
-                    removeTask={removeTask}
-                    changeFilter={changeTodoListFilter}
-                    isDemo={isDemo}
-                  />
-                </Paper>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Container>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <ErrorSnackbar />
+        <AppHeader />
+        <Container fixed>
+          <Routes>
+            <Route path="/" element={<ToDoListsList isDemo={isDemo} />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/error404" element={<h1>Error 404: Page not found</h1>} />
+            <Route path="*" element={<Navigate to="/error404" />} />
+          </Routes>
+        </Container>
+      </div>
+    </BrowserRouter>
   );
 }
 

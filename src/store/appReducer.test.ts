@@ -5,6 +5,7 @@ let startState: AppState;
 
 beforeEach(() => {
   startState = {
+    isInitialized: false,
     status: "idle",
     error: null,
   };
