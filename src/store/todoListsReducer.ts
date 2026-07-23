@@ -4,6 +4,7 @@ import { setAppStatusAC } from './appReducer';
 import type { RequestStatus } from '../models/app';
 import { handleRequestError, handleResponseError } from '../utils/errorUtils';
 import type { AppThunk } from './store';
+import { fetchTasks } from './tasksReducer';
 
 export const TODOLIST_ACTION_TYPES = {
   SET_TODOS: 'todoList/SET_TODOS',
@@ -12,6 +13,7 @@ export const TODOLIST_ACTION_TYPES = {
   CHANGE_FILTER: 'todoList/CHANGE_FILTER',
   CHANGE_ENTITY_STATUS: 'todoList/CHANGE_ENTITY_STATUS',
   REMOVE: 'todoList/REMOVE',
+  CLEAR_TODOS: 'todoList/CLEAR_TODOLISTS_DATA',
 } as const;
 
 export type SetTodoListsAction = ReturnType<typeof setTodoListsAC>;
@@ -20,6 +22,7 @@ type ChangeTodoListTitleAction = ReturnType<typeof changeTodoListTitleAC>;
 type ChangeTodoListFilterAction = ReturnType<typeof changeTodoListFilterAC>;
 export type RemovedTodoListAction = ReturnType<typeof removeTodoListAC>;
 export type ChangeTodoListEntityStatusAction = ReturnType<typeof changeTodoListEntityStatusAC>;
+export type ClearTodoListsDataAction = ReturnType<typeof clearTodoListsDataAC>;
 
 export type TodoListActions =
   SetTodoListsAction |
@@ -27,7 +30,8 @@ export type TodoListActions =
   ChangeTodoListTitleAction |
   ChangeTodoListFilterAction |
   RemovedTodoListAction |
-  ChangeTodoListEntityStatusAction;
+  ChangeTodoListEntityStatusAction |
+  ClearTodoListsDataAction;
 
 const initState: Array<TodoListDomainType> = [];
 
@@ -51,6 +55,9 @@ export const todoListsReducer = (state: Array<TodoListDomainType> = initState, a
     case TODOLIST_ACTION_TYPES.CHANGE_ENTITY_STATUS: {
       return state.map(todo => todo.id === action.id ?
         { ...todo, entityStatus: action.status } : todo);;
+    }
+    case TODOLIST_ACTION_TYPES.CLEAR_TODOS: {
+      return [];
     }
     default:
       return state;
@@ -81,6 +88,10 @@ export const changeTodoListEntityStatusAC = (id: string, status: RequestStatus) 
   return { type: TODOLIST_ACTION_TYPES.CHANGE_ENTITY_STATUS, id, status };
 };
 
+export const clearTodoListsDataAC = () => {
+  return { type: TODOLIST_ACTION_TYPES.CLEAR_TODOS };
+};
+
 export const fetchTodoLists = (): AppThunk => {
   return (dispatch) => {
     dispatch(setAppStatusAC('loading'));
@@ -88,6 +99,12 @@ export const fetchTodoLists = (): AppThunk => {
       .then(response => {
         dispatch(setTodoListsAC(response.data));
         dispatch(setAppStatusAC('succeeded'));
+        return response.data;
+      })
+      .then(todoLists => {
+        todoLists.forEach(todo => {
+          dispatch(fetchTasks(todo.id));
+        });
       })
       .catch(error => {
         handleRequestError(error, dispatch);

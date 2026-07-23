@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, type FC } from 'react';
+import { memo, useCallback, type FC } from 'react';
 import { TaskStatuses, type TaskStatus, type DomainTask } from '../models/task';
 import type { TodoListDomainType, TodoListFilterValues } from '../models/todo';
 import AddItemForm from './UI/AddItemForm/AddItemForm';
@@ -6,8 +6,6 @@ import Task from './Task/Task';
 import EditableSpan from './UI/EditableSpan/EditableSpan';
 import { Button, IconButton } from '@mui/material';
 import { Delete } from '@mui/icons-material';
-import { useAppDispatch } from '../store/store';
-import { fetchTasks } from '../store/tasksReducer';
 
 type ToDoListProps = {
   todo: TodoListDomainType,
@@ -19,7 +17,6 @@ type ToDoListProps = {
   changeTaskStatus: (id: string, taskId: string, status: TaskStatus) => void,
   removeTask: (id: string, taskId: string) => void,
   changeFilter: (id: string, filter: TodoListFilterValues) => void,
-  isDemo?: boolean,
 };
 
 const ToDoList: FC<ToDoListProps> = memo(({
@@ -32,16 +29,8 @@ const ToDoList: FC<ToDoListProps> = memo(({
   changeTaskStatus,
   removeTask,
   changeFilter,
-  isDemo = false,
 }) => {
   const { id, title, filter, entityStatus } = todo;
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (isDemo) return;
-
-    dispatch(fetchTasks(id));
-  }, [id]);
 
   const onAddTask = useCallback((title: string) => {
     addTask(id, title);

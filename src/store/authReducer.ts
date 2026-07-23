@@ -2,6 +2,7 @@ import { authAPI, type LoginParams } from "../api/todoListsApi";
 import { handleRequestError, handleResponseError } from "../utils/errorUtils";
 import { setAppStatusAC } from "./appReducer";
 import type { AppThunk } from "./store";
+import { clearTodoListsDataAC } from "./todoListsReducer";
 
 const AUTH_ACTION_TYPES = {
   LOGIN: "login/SET-IS-LOGGED-IN",
@@ -38,6 +39,7 @@ export const loginTC = (data: LoginParams): AppThunk => {
       .login(data)
       .then((response) => {
         if (response.data.resultCode === 0) {
+          dispatch(clearTodoListsDataAC());
           dispatch(setIsLoggedInAC(true));
           dispatch(setAppStatusAC("succeeded"));
         } else {

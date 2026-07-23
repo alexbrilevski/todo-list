@@ -92,7 +92,6 @@ const ToDoListsList: FC<ToDoListsListProps> = ({ isDemo = false }) => {
                   changeTaskStatus={changeTaskStatus}
                   removeTask={removeTask}
                   changeFilter={changeTodoListFilter}
-                  isDemo={isDemo}
                 />
               </Paper>
             </Grid>

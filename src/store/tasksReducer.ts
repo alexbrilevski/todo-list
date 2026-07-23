@@ -5,6 +5,7 @@ import {
 import {
   TODOLIST_ACTION_TYPES,
   type AddTodoListAction,
+  type ClearTodoListsDataAction,
   type RemovedTodoListAction,
   type SetTodoListsAction
 } from './todoListsReducer';
@@ -41,7 +42,8 @@ export type TaskActions =
   ReturnType<typeof changeTaskEntityStatusAC> |
   SetTodoListsAction |
   AddTodoListAction |
-  RemovedTodoListAction;
+  RemovedTodoListAction |
+  ClearTodoListsDataAction;
 
 const initState: TasksStateType = {};
 
@@ -92,6 +94,9 @@ export const tasksReducer = (state: TasksStateType = initState, action: TaskActi
       const updatedState = { ...state };
       delete updatedState[action.id];
       return updatedState;
+    case TODOLIST_ACTION_TYPES.CLEAR_TODOS: {
+      return {};
+    }
     default:
       return state;
   }
