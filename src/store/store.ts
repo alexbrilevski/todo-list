@@ -22,4 +22,4 @@ const rootReducer = combineReducers({
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 
-export const store = createStore(rootReducer, applyMiddleware(thunk));
+export const store = createStore(rootReducer, undefined, applyMiddleware(thunk));
