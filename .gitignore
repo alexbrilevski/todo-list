@@ -25,3 +25,16 @@ dist-ssr
 
 *storybook.log
 storybook-static
+
+# Ignore Yarn PnP and cache files
+.pnp.*
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+
+# Keep these Yarn files in version control
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
